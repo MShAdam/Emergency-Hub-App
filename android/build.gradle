@@ -1,0 +1,50 @@
+buildscript {
+    ext.kotlin_version = '1.9.23'
+    repositories {
+        google()
+        jcenter()
+    }
+
+    dependencies {
+        classpath 'com.android.tools.build:gradle:4.2.2'
+        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
+    }
+}
+
+plugins {
+  // ...
+
+  // Add the dependency for the Google services Gradle plugin
+  id 'com.google.gms.google-services' version '4.4.1' apply false
+
+}
+
+allprojects {
+    repositories {
+        google()
+        mavenCentral()
+    }
+}
+
+// dependencies {
+//     // Import the BoM for the Firebase platform
+//     implementation(platform("com.google.firebase:firebase-bom:32.7.4"))
+
+//     // Add the dependency for the Firebase Authentication library
+//     // When using the BoM, you don't specify versions in Firebase library dependencies
+//     implementation("com.google.firebase:firebase-auth")
+// }
+
+
+
+rootProject.buildDir = '../build'
+subprojects {
+    project.buildDir = "${rootProject.buildDir}/${project.name}"
+}
+subprojects {
+    project.evaluationDependsOn(':app')
+}
+
+tasks.register("clean", Delete) {
+    delete rootProject.buildDir
+}

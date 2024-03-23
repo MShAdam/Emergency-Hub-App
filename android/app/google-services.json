@@ -1,0 +1,68 @@
+{
+  "project_info": {
+    "project_number": "1098018897892",
+    "firebase_url": "https://emergency-hub-e6079-default-rtdb.firebaseio.com",
+    "project_id": "emergency-hub-e6079",
+    "storage_bucket": "emergency-hub-e6079.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1098018897892:android:d5db6db23a7a37407751f1",
+        "android_client_info": {
+          "package_name": "com.example.emergancyhub"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD9j-I-xSNTuAFJto2CAkFl5pmIDOBS6EA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1098018897892:android:1b83fcf4c6100b537751f1",
+        "android_client_info": {
+          "package_name": "com.example.emergencyhub"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD9j-I-xSNTuAFJto2CAkFl5pmIDOBS6EA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1098018897892:android:6fbe46775bdd45607751f1",
+        "android_client_info": {
+          "package_name": "com.example.flutter_application_1"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD9j-I-xSNTuAFJto2CAkFl5pmIDOBS6EA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
