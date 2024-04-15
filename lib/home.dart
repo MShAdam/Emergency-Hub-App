@@ -118,7 +118,9 @@ class _homeScreenState extends State<homeScreen> {
                             SizedBox(
                               width: MediaQuery.of(context).size.width * 0.45,
                               child: TextButton(
-                                onPressed: () {},
+                                onPressed: () {
+                                  Navigator.pushNamed(context, '/standardRooms');
+                                },
                                 child: Column(
                                   children: [
                                     Image.asset(

@@ -22,9 +22,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
   final TextEditingController _lastNameController = TextEditingController();
 
   final TextEditingController _passwordController = TextEditingController();
-
-  bool _isLoading = false;
-
+  
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -256,7 +254,6 @@ class _SignUpScreenState extends State<SignUpScreen> {
   void _submitForm(BuildContext context) async {
     if (_formKey.currentState!.validate()) {
       setState(() {
-        _isLoading = true;
       });
 
       try {
@@ -290,7 +287,6 @@ class _SignUpScreenState extends State<SignUpScreen> {
         Navigator.pushReplacementNamed(context, '/signin');
       } catch (e) {
         setState(() {
-          _isLoading = false;
         });
         print('Error: $e');
         // Handle error

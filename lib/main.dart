@@ -14,6 +14,7 @@ import 'package:emergancyhub/onboard/splashscreen.dart';
 import 'package:emergancyhub/forgetpassword/forgetpassword.dart';
 import 'package:emergancyhub/forgetpassword/verfiy.dart';
 import 'package:emergancyhub/forgetpassword/changepassword.dart';
+import 'package:emergancyhub/services/standard_rooms.dart';
 
 
 void main() async {
@@ -47,7 +48,7 @@ class MyApp extends StatelessWidget {
         '/forgetpassword': (context) => ForgetPasswordScreen(),
         '/verfiy': (context) => verfiyPasswordScreen(),
         '/changepassword': (context) => ChangePasswordScreen(),
-
+        '/standardRooms': (context) => standardRoomsScreen(),
       },
     );
   }
