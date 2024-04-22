@@ -80,13 +80,18 @@ class _quarantineScreenState extends State<quarantineScreen> {
                             Positioned(
                               left: 10.0,
                               top: 130.0,
-                              child: Image.asset(
-                                'assets/img/standard_rooms.png',
-                                // fit: BoxFit.cover, // Choose fit mode
-                                width: screenSize.width *
-                                    0.25, // Set desired width
-                                height: screenSize.height *
-                                    0.1, // Set desired height
+                              child: SizedBox(
+                                width: MediaQuery.of(context).size.width * 0.25,
+                                child: Column(
+                                  children: [
+                                    Image.asset(
+                                        'assets/img/quarantine.png'), // Replace with your image path
+                                    const Text(
+                                      'Quarantine',
+                                      style: TextStyle(fontSize: 15.0),
+                                    ),
+                                  ],
+                                ),
                               ),
                             ),
                           ],
