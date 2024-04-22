@@ -15,6 +15,10 @@ import 'package:emergancyhub/forgetpassword/forgetpassword.dart';
 import 'package:emergancyhub/forgetpassword/verfiy.dart';
 import 'package:emergancyhub/forgetpassword/changepassword.dart';
 import 'package:emergancyhub/services/standard_rooms.dart';
+import 'package:emergancyhub/services/ambulance.dart';
+import 'package:emergancyhub/services/intensive_care.dart';
+import 'package:emergancyhub/services/nursery.dart';
+import 'package:emergancyhub/services/quarantine.dart';
 
 
 void main() async {
@@ -33,7 +37,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       // Define the initial route
-      initialRoute: '/splashscreen',
+      initialRoute: '/home',
       // Define the routes
       routes: {
         '/': (context) => SignUpScreen(),
@@ -49,6 +53,10 @@ class MyApp extends StatelessWidget {
         '/verfiy': (context) => verfiyPasswordScreen(),
         '/changepassword': (context) => ChangePasswordScreen(),
         '/standardRooms': (context) => standardRoomsScreen(),
+        '/ambulance': (context) => ambulanceScreen(),
+        '/intensiveCare': (context) => intensiveCareScreen(),
+        '/nursery': (context) => nurseryScreen(),
+        '/quarantine': (context) => quarantineScreen(),
       },
     );
   }

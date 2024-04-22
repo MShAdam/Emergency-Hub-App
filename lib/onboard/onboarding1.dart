@@ -13,11 +13,14 @@ class onboard1Screen extends StatelessWidget {
                   child: Center(
                     child: Column(
                       children: [
+                        SizedBox(
+                          height: MediaQuery.of(context).size.height * 0.0530,
+                        ),
                         Image.asset(
                           'assets/img/Lifesavers Hand.png',
                         ),
                         SizedBox(
-                          height: MediaQuery.of(context).size.height * 0.1190,
+                          height: MediaQuery.of(context).size.height * 0.130,
                         ),
                         const Text(
                           "Hospital Searching",

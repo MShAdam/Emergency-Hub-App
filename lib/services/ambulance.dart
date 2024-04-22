@@ -1,19 +1,21 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_database/firebase_database.dart';
 
-class standardRoomsScreen extends StatefulWidget {
+class ambulanceScreen extends StatefulWidget {
   @override
-  State<standardRoomsScreen> createState() => _standardRoomsScreenState();
+  State<ambulanceScreen> createState() => _ambulanceScreenState();
 }
 
-class _standardRoomsScreenState extends State<standardRoomsScreen> {
+class _ambulanceScreenState extends State<ambulanceScreen> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   final TextEditingController _nameController = TextEditingController();
   final TextEditingController _phoneController = TextEditingController();
   final TextEditingController _ageController = TextEditingController();
   final TextEditingController _addressController = TextEditingController();
   String? _genderSelected;
+  String? _timeSelected;
   DateTime _reservationDate = DateTime.now();
+  bool _isNow = true;
 
   Future<void> _selectDate(BuildContext context) async {
     final DateTime? picked = await showDatePicker(
@@ -33,12 +35,13 @@ class _standardRoomsScreenState extends State<standardRoomsScreen> {
     if (_formKey.currentState!.validate()) {
       final databaseReference = FirebaseDatabase.instance.reference();
 
-      databaseReference.child('/requests/standardRooms').push().set({
+      databaseReference.child('/requests/ambulance').push().set({
         'name': _nameController.text,
         'phone': _phoneController.text,
         'age': _ageController.text,
         'address': _addressController.text,
         'gender': _genderSelected,
+        'time': _timeSelected,
         'reservationDate': _reservationDate.toIso8601String(),
         'room': 0,
         'accepted': false,
@@ -204,6 +207,66 @@ class _standardRoomsScreenState extends State<standardRoomsScreen> {
                             const Padding(
                               padding: EdgeInsets.symmetric(horizontal: 20.0),
                               child: Text(
+                                'Time:',
+                                style: TextStyle(
+                                  fontSize: 18.0,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                            ),
+                            const SizedBox(height: 10.0),
+                            Padding(
+                              padding:
+                                  const EdgeInsets.symmetric(horizontal: 20.0),
+                              child: Container(
+                                decoration: BoxDecoration(
+                                  color: AppColors
+                                      .backgroundColor, // Background fill color
+                                  borderRadius: BorderRadius.circular(25.0),
+                                ),
+                                child: DropdownButton<String>(
+                                  itemHeight: 65,
+                                  dropdownColor: AppColors.backgroundColor,
+                                  value: _timeSelected,
+                                  onChanged: (String? newValue) {
+                                    setState(() {
+                                      if (newValue == "Another Time") {
+                                        _isNow = false;
+                                        _reservationDate = DateTime.now();
+                                      } else {
+                                        _isNow = true;
+                                      }
+                                      _timeSelected = newValue;
+                                    });
+                                  },
+                                  isExpanded: true,
+                                  underline:
+                                      const SizedBox(), // Remove underline
+                                  icon: const Icon(Icons.arrow_drop_down,
+                                      color: AppColors
+                                          .WhiteColor), // Dropdown arrow color
+                                  style: const TextStyle(
+                                      color: AppColors
+                                          .WhiteColor), // Dropdown text color
+                                  items: <String>['Now', 'Another Time']
+                                      .map<DropdownMenuItem<String>>(
+                                          (String value) {
+                                    return DropdownMenuItem<String>(
+                                      value: value,
+                                      child: Padding(
+                                        padding: const EdgeInsets.symmetric(
+                                            horizontal: 10.0),
+                                        child: Text(value),
+                                      ),
+                                    );
+                                  }).toList(),
+                                ),
+                              ),
+                            ),
+                            const SizedBox(height: 10.0),
+                            const Padding(
+                              padding: EdgeInsets.symmetric(horizontal: 20.0),
+                              child: Text(
                                 'Reservation Date:',
                                 style: TextStyle(
                                   fontSize: 18.0,
@@ -218,7 +281,9 @@ class _standardRoomsScreenState extends State<standardRoomsScreen> {
                                 padding: const EdgeInsets.fromLTRB(
                                     20.0, 0.0, 20.0, 0.0),
                                 child: ElevatedButton(
-                                  onPressed: () => _selectDate(context),
+                                  onPressed: !_isNow
+                                      ? () => _selectDate(context)
+                                      : null,
                                   style: ElevatedButton.styleFrom(
                                       backgroundColor:
                                           AppColors.backgroundColor,
@@ -328,7 +393,6 @@ class _standardRoomsScreenState extends State<standardRoomsScreen> {
                               padding: const EdgeInsets.fromLTRB(
                                   20.0, 10.0, 20.0, 10.0),
                               child: ElevatedButton(
-                                // onPressed: () => _submitForm(context),
                                 onPressed: () {
                                   _submitForm(context);
                                   showDialog(

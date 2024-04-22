@@ -13,6 +13,9 @@ class onboard2Screen extends StatelessWidget {
                   child: Center(
                     child: Column(
                       children: [
+                        SizedBox(
+                          height: MediaQuery.of(context).size.height * 0.0530,
+                        ),
                         Image.asset(
                           'assets/img/blood-drive-icon 1.png',
                         ),

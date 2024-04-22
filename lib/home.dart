@@ -119,7 +119,8 @@ class _homeScreenState extends State<homeScreen> {
                               width: MediaQuery.of(context).size.width * 0.45,
                               child: TextButton(
                                 onPressed: () {
-                                  Navigator.pushNamed(context, '/standardRooms');
+                                  Navigator.pushNamed(
+                                      context, '/standardRooms');
                                 },
                                 child: Column(
                                   children: [
@@ -136,7 +137,10 @@ class _homeScreenState extends State<homeScreen> {
                             SizedBox(
                               width: MediaQuery.of(context).size.width * 0.45,
                               child: TextButton(
-                                onPressed: () {},
+                                onPressed: () {
+                                  Navigator.pushNamed(
+                                      context, '/intensiveCare');
+                                },
                                 child: Column(
                                   children: [
                                     Image.asset(
@@ -160,7 +164,9 @@ class _homeScreenState extends State<homeScreen> {
                             SizedBox(
                               width: MediaQuery.of(context).size.width * 0.45,
                               child: TextButton(
-                                onPressed: () {},
+                                onPressed: () {
+                                  Navigator.pushNamed(context, '/nursery');
+                                },
                                 child: Column(
                                   children: [
                                     Image.asset(
@@ -176,7 +182,9 @@ class _homeScreenState extends State<homeScreen> {
                             SizedBox(
                               width: MediaQuery.of(context).size.width * 0.45,
                               child: TextButton(
-                                onPressed: () {},
+                                onPressed: () {
+                                  Navigator.pushNamed(context, '/ambulance');
+                                },
                                 child: Column(
                                   children: [
                                     Image.asset(
@@ -223,6 +231,29 @@ class _homeScreenState extends State<homeScreen> {
                                         'assets/img/Blood Donate.png'), // Replace with your image path
                                     const Text(
                                       'Blood Donate',
+                                      style: TextStyle(fontSize: 20.0),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            SizedBox(
+                              width: MediaQuery.of(context).size.width * 0.45,
+                              child: TextButton(
+                                onPressed: () {
+                                  Navigator.pushNamed(context, '/quarantine');
+                                },
+                                child: Column(
+                                  children: [
+                                    Image.asset(
+                                        'assets/img/quarantine.png'), // Replace with your image path
+                                    const Text(
+                                      'Quarantine',
                                       style: TextStyle(fontSize: 20.0),
                                     ),
                                   ],

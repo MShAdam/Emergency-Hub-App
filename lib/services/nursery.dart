@@ -1,17 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_database/firebase_database.dart';
 
-class standardRoomsScreen extends StatefulWidget {
+class nurseryScreen extends StatefulWidget {
   @override
-  State<standardRoomsScreen> createState() => _standardRoomsScreenState();
+  State<nurseryScreen> createState() => _nurseryScreenState();
 }
 
-class _standardRoomsScreenState extends State<standardRoomsScreen> {
+class _nurseryScreenState extends State<nurseryScreen> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   final TextEditingController _nameController = TextEditingController();
   final TextEditingController _phoneController = TextEditingController();
   final TextEditingController _ageController = TextEditingController();
   final TextEditingController _addressController = TextEditingController();
+  final TextEditingController _EntryTimeController = TextEditingController();
   String? _genderSelected;
   DateTime _reservationDate = DateTime.now();
 
@@ -33,13 +34,14 @@ class _standardRoomsScreenState extends State<standardRoomsScreen> {
     if (_formKey.currentState!.validate()) {
       final databaseReference = FirebaseDatabase.instance.reference();
 
-      databaseReference.child('/requests/standardRooms').push().set({
+      databaseReference.child('/requests/nursery').push().set({
         'name': _nameController.text,
         'phone': _phoneController.text,
         'age': _ageController.text,
         'address': _addressController.text,
         'gender': _genderSelected,
         'reservationDate': _reservationDate.toIso8601String(),
+        'EntryTime': _EntryTimeController.text,
         'room': 0,
         'accepted': false,
         'removed': false
@@ -171,7 +173,7 @@ class _standardRoomsScreenState extends State<standardRoomsScreen> {
                             const Padding(
                               padding: EdgeInsets.symmetric(horizontal: 20.0),
                               child: Text(
-                                'Age:',
+                                'Age: \'on days\'',
                                 style: TextStyle(
                                   fontSize: 18.0,
                                   fontWeight: FontWeight.bold,
@@ -227,13 +229,46 @@ class _standardRoomsScreenState extends State<standardRoomsScreen> {
                                           48)),
                                   child: Text(
                                     '${_reservationDate.year}-${_reservationDate.month}-${_reservationDate.day}',
-                                    style: const TextStyle(
+                                    style: TextStyle(
                                         fontSize: 14,
                                         fontWeight: FontWeight.w700,
                                         color:
                                             Color.fromRGBO(255, 255, 255, 1)),
                                   ),
                                 ),
+                              ),
+                            ),
+                            const SizedBox(height: 10.0),
+                            const Padding(
+                              padding: EdgeInsets.symmetric(horizontal: 20.0),
+                              child: Text(
+                                'Entry time',
+                                style: TextStyle(
+                                  fontSize: 18.0,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                            ),
+                            const SizedBox(height: 5.0),
+                            Padding(
+                              padding:
+                                  const EdgeInsets.symmetric(horizontal: 20.0),
+                              child: TextField(
+                                controller: _EntryTimeController,
+                                decoration: InputDecoration(
+                                  fillColor: AppColors
+                                      .backgroundColor, // Set background color here
+                                  filled: true,
+                                  border: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(
+                                        25.0), // Border radius here
+                                    borderSide:
+                                        BorderSide.none, // No border side
+                                  ),
+                                ),
+                                style: const TextStyle(
+                                    color:
+                                        AppColors.WhiteColor), // Cursor color
                               ),
                             ),
                             const SizedBox(height: 10.0),
@@ -328,7 +363,6 @@ class _standardRoomsScreenState extends State<standardRoomsScreen> {
                               padding: const EdgeInsets.fromLTRB(
                                   20.0, 10.0, 20.0, 10.0),
                               child: ElevatedButton(
-                                // onPressed: () => _submitForm(context),
                                 onPressed: () {
                                   _submitForm(context);
                                   showDialog(

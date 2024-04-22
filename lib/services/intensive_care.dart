@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_database/firebase_database.dart';
 
-class standardRoomsScreen extends StatefulWidget {
+class intensiveCareScreen extends StatefulWidget {
   @override
-  State<standardRoomsScreen> createState() => _standardRoomsScreenState();
+  State<intensiveCareScreen> createState() => _intensiveCareScreenState();
 }
 
-class _standardRoomsScreenState extends State<standardRoomsScreen> {
+class _intensiveCareScreenState extends State<intensiveCareScreen> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   final TextEditingController _nameController = TextEditingController();
   final TextEditingController _phoneController = TextEditingController();
@@ -33,7 +33,7 @@ class _standardRoomsScreenState extends State<standardRoomsScreen> {
     if (_formKey.currentState!.validate()) {
       final databaseReference = FirebaseDatabase.instance.reference();
 
-      databaseReference.child('/requests/standardRooms').push().set({
+      databaseReference.child('/requests/intensiveCare').push().set({
         'name': _nameController.text,
         'phone': _phoneController.text,
         'age': _ageController.text,
@@ -227,7 +227,7 @@ class _standardRoomsScreenState extends State<standardRoomsScreen> {
                                           48)),
                                   child: Text(
                                     '${_reservationDate.year}-${_reservationDate.month}-${_reservationDate.day}',
-                                    style: const TextStyle(
+                                    style: TextStyle(
                                         fontSize: 14,
                                         fontWeight: FontWeight.w700,
                                         color:
@@ -328,7 +328,6 @@ class _standardRoomsScreenState extends State<standardRoomsScreen> {
                               padding: const EdgeInsets.fromLTRB(
                                   20.0, 10.0, 20.0, 10.0),
                               child: ElevatedButton(
-                                // onPressed: () => _submitForm(context),
                                 onPressed: () {
                                   _submitForm(context);
                                   showDialog(
