@@ -75,9 +75,20 @@ class _nurseryScreenState extends State<nurseryScreen> {
                             Image.asset('assets/img/headimg.jpg'),
                             Positioned(
                               right: 10.0,
-                              top: 25.0,
+                              top: 50.0,
                               child: Image.asset(
                                   'assets/img/logo.png'), // Your foreground image
+                            ),
+                            Positioned(
+                              left: 10.0,
+                              top: 50.0,
+                              child: IconButton(
+                                icon: Icon(Icons.arrow_back),
+                                onPressed: () {
+                                  Navigator.pushNamed(
+                                      context, '/home');
+                                },
+                              ), // Your foreground image
                             ),
                             Positioned(
                               left: 10.0,

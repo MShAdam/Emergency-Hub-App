@@ -82,9 +82,20 @@ class _ambulanceScreenState extends State<ambulanceScreen> {
                             ),
                             Positioned(
                               left: 10.0,
+                              top: 50.0,
+                              child: IconButton(
+                                icon: Icon(Icons.arrow_back),
+                                onPressed: () {
+                                  Navigator.pushNamed(
+                                      context, '/home');
+                                },
+                              ), // Your foreground image
+                            ),
+                            Positioned(
+                              left: 10.0,
                               top: 130.0,
                               child: SizedBox(
-                              width: MediaQuery.of(context).size.width * 0.25,
+                                width: MediaQuery.of(context).size.width * 0.25,
                                 child: Column(
                                   children: [
                                     Image.asset(
@@ -95,7 +106,7 @@ class _ambulanceScreenState extends State<ambulanceScreen> {
                                     ),
                                   ],
                                 ),
-                            ),
+                              ),
                             ),
                           ],
                         ),
