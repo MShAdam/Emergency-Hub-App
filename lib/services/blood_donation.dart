@@ -14,6 +14,7 @@ class _bloodDonationScreenState extends State<bloodDonationScreen> {
   // final TextEditingController _addressController = TextEditingController();
   String? _genderSelected;
   String? _bloodTybeSelected;
+  String? _hospitalSelected;
   DateTime _reservationDate = DateTime.now();
   TimeOfDay _selectedTime = TimeOfDay.now();
   Future<void> _selectDate(BuildContext context) async {
@@ -50,7 +51,7 @@ class _bloodDonationScreenState extends State<bloodDonationScreen> {
         'name': _nameController.text,
         'phone': _phoneController.text,
         'age': _ageController.text,
-        // 'address': _addressController.text,
+        'hospital': _hospitalSelected,
         'gender': _genderSelected,
         'reservationDate': _reservationDate.toIso8601String(),
         'bloodType': _bloodTybeSelected,
@@ -381,18 +382,63 @@ class _bloodDonationScreenState extends State<bloodDonationScreen> {
                                 ),
                               ),
                             ),
-                            // const SizedBox(height: 20.0),
-                            // const Padding(
-                            //   padding: EdgeInsets.symmetric(horizontal: 20.0),
-                            //   child: Text(
-                            //     'Address:',
-                            //     style: TextStyle(
-                            //       fontSize: 18.0,
-                            //       fontWeight: FontWeight.bold,
-                            //     ),
-                            //   ),
-                            // ),
-                            // const SizedBox(height: 5.0),
+                            const SizedBox(height: 20.0),
+                            const Padding(
+                              padding: EdgeInsets.symmetric(horizontal: 20.0),
+                              child: Text(
+                                'Hospital:',
+                                style: TextStyle(
+                                  fontSize: 18.0,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                            ),
+                            const SizedBox(height: 5.0),
+                            Padding(
+                              padding:
+                                  const EdgeInsets.symmetric(horizontal: 20.0),
+                              child: Container(
+                                decoration: BoxDecoration(
+                                  color: AppColors
+                                      .backgroundColor, // Background fill color
+                                  borderRadius: BorderRadius.circular(25.0),
+                                ),
+                                child: DropdownButton<String>(
+                                  itemHeight: 65,
+                                  dropdownColor: AppColors.backgroundColor,
+                                  value: _hospitalSelected,
+                                  onChanged: (String? newValue) {
+                                    setState(() {
+                                      _hospitalSelected = newValue;
+                                    });
+                                  },
+                                  isExpanded: true,
+                                  underline:
+                                      const SizedBox(), // Remove underline
+                                  icon: const Icon(Icons.arrow_drop_down,
+                                      color: AppColors
+                                          .WhiteColor), // Dropdown arrow color
+                                  style: const TextStyle(
+                                      color: AppColors
+                                          .WhiteColor), // Dropdown text color
+                                  items: <String>[
+                                    'Air Force Specialized Hospital',
+                                    'As-Salam International Hospital',
+                                    'Heliopolis Hospital'
+                                  ].map<DropdownMenuItem<String>>(
+                                      (String value) {
+                                    return DropdownMenuItem<String>(
+                                      value: value,
+                                      child: Padding(
+                                        padding: const EdgeInsets.symmetric(
+                                            horizontal: 10.0),
+                                        child: Text(value),
+                                      ),
+                                    );
+                                  }).toList(),
+                                ),
+                              ),
+                            ),
                             // Padding(
                             //   padding:
                             //       const EdgeInsets.symmetric(horizontal: 20.0),
