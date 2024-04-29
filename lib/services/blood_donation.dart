@@ -1,19 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_database/firebase_database.dart';
 
-class nurseryScreen extends StatefulWidget {
+class bloodDonationScreen extends StatefulWidget {
   @override
-  State<nurseryScreen> createState() => _nurseryScreenState();
+  State<bloodDonationScreen> createState() => _bloodDonationScreenState();
 }
 
-class _nurseryScreenState extends State<nurseryScreen> {
+class _bloodDonationScreenState extends State<bloodDonationScreen> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   final TextEditingController _nameController = TextEditingController();
   final TextEditingController _phoneController = TextEditingController();
   final TextEditingController _ageController = TextEditingController();
-  final TextEditingController _addressController = TextEditingController();
-  final TextEditingController _EntryTimeController = TextEditingController();
+  // final TextEditingController _addressController = TextEditingController();
   String? _genderSelected;
+  String? _bloodTybeSelected;
   DateTime _reservationDate = DateTime.now();
   TimeOfDay _selectedTime = TimeOfDay.now();
   Future<void> _selectDate(BuildContext context) async {
@@ -46,14 +46,14 @@ class _nurseryScreenState extends State<nurseryScreen> {
     if (_formKey.currentState!.validate()) {
       final databaseReference = FirebaseDatabase.instance.reference();
 
-      databaseReference.child('/requests/nursery').push().set({
+      databaseReference.child('/requests/bloodDonation').push().set({
         'name': _nameController.text,
         'phone': _phoneController.text,
         'age': _ageController.text,
-        'address': _addressController.text,
+        // 'address': _addressController.text,
         'gender': _genderSelected,
         'reservationDate': _reservationDate.toIso8601String(),
-        'EntryTime': _selectedTime,
+        'bloodType': _bloodTybeSelected,
         'room': 0,
         'accepted': false,
         'removed': false
@@ -110,9 +110,9 @@ class _nurseryScreenState extends State<nurseryScreen> {
                                   child: Column(
                                     children: [
                                       Image.asset(
-                                          'assets/img/Nursery.png'), // Replace with your image path
+                                          'assets/img/bloodDonation.png'), // Replace with your image path
                                       const Text(
-                                        'Nursery',
+                                        'Blood Donation',
                                         style: TextStyle(fontSize: 15.0),
                                       ),
                                     ],
@@ -200,7 +200,7 @@ class _nurseryScreenState extends State<nurseryScreen> {
                             const Padding(
                               padding: EdgeInsets.symmetric(horizontal: 20.0),
                               child: Text(
-                                'Age: \'by days\'',
+                                'Age:',
                                 style: TextStyle(
                                   fontSize: 18.0,
                                   fontWeight: FontWeight.bold,
@@ -233,71 +233,61 @@ class _nurseryScreenState extends State<nurseryScreen> {
                             const Padding(
                               padding: EdgeInsets.symmetric(horizontal: 20.0),
                               child: Text(
-                                'Reservation Date:',
+                                'Blood Type:',
                                 style: TextStyle(
                                   fontSize: 18.0,
                                   fontWeight: FontWeight.bold,
-                                ),
-                              ),
-                            ),
-                            const SizedBox(height: 5.0),
-                            SizedBox(
-                              height: 65.0,
-                              child: Padding(
-                                padding: const EdgeInsets.fromLTRB(
-                                    20.0, 0.0, 20.0, 0.0),
-                                child: ElevatedButton(
-                                  onPressed: () => _selectDate(context),
-                                  style: ElevatedButton.styleFrom(
-                                      backgroundColor:
-                                          AppColors.backgroundColor,
-                                      fixedSize: Size(
-                                          MediaQuery.of(context).size.width,
-                                          48)),
-                                  child: Text(
-                                    '${_reservationDate.year}-${_reservationDate.month}-${_reservationDate.day}',
-                                    style: const TextStyle(
-                                        fontSize: 14,
-                                        fontWeight: FontWeight.w700,
-                                        color:
-                                            Color.fromRGBO(255, 255, 255, 1)),
-                                  ),
                                 ),
                               ),
                             ),
                             const SizedBox(height: 10.0),
-                            const Padding(
-                              padding: EdgeInsets.symmetric(horizontal: 20.0),
-                              child: Text(
-                                'Entry time ',
-                                style: TextStyle(
-                                  fontSize: 18.0,
-                                  fontWeight: FontWeight.bold,
+                            Padding(
+                              padding:
+                                  const EdgeInsets.symmetric(horizontal: 20.0),
+                              child: Container(
+                                decoration: BoxDecoration(
+                                  color: AppColors
+                                      .backgroundColor, // Background fill color
+                                  borderRadius: BorderRadius.circular(25.0),
                                 ),
-                              ),
-                            ),
-                            const SizedBox(height: 5.0),
-                            SizedBox(
-                              height: 65.0,
-                              child: Padding(
-                                padding: const EdgeInsets.fromLTRB(
-                                    20.0, 0.0, 20.0, 0.0),
-                                child: ElevatedButton(
-                                  onPressed: () => _selectTime(context),
-                                  style: ElevatedButton.styleFrom(
-                                      backgroundColor:
-                                          AppColors.backgroundColor,
-                                      fixedSize: Size(
-                                          MediaQuery.of(context).size.width,
-                                          48)),
-                                  child: Text(
-                                    _selectedTime.format(context),
-                                    style: const TextStyle(
-                                        fontSize: 14,
-                                        fontWeight: FontWeight.w700,
-                                        color:
-                                            Color.fromRGBO(255, 255, 255, 1)),
-                                  ),
+                                child: DropdownButton<String>(
+                                  itemHeight: 65,
+                                  dropdownColor: AppColors.backgroundColor,
+                                  value: _bloodTybeSelected,
+                                  onChanged: (String? newValue) {
+                                    setState(() {
+                                      _bloodTybeSelected = newValue;
+                                    });
+                                  },
+                                  isExpanded: true,
+                                  underline:
+                                      const SizedBox(), // Remove underline
+                                  icon: const Icon(Icons.arrow_drop_down,
+                                      color: AppColors
+                                          .WhiteColor), // Dropdown arrow color
+                                  style: const TextStyle(
+                                      color: AppColors
+                                          .WhiteColor), // Dropdown text color
+                                  items: <String>[
+                                    'A+',
+                                    'A-',
+                                    'B+',
+                                    'B-',
+                                    'AB+',
+                                    'AB-',
+                                    'O+',
+                                    'O-'
+                                  ].map<DropdownMenuItem<String>>(
+                                      (String value) {
+                                    return DropdownMenuItem<String>(
+                                      value: value,
+                                      child: Padding(
+                                        padding: const EdgeInsets.symmetric(
+                                            horizontal: 10.0),
+                                        child: Text(value),
+                                      ),
+                                    );
+                                  }).toList(),
                                 ),
                               ),
                             ),
@@ -355,11 +345,11 @@ class _nurseryScreenState extends State<nurseryScreen> {
                                 ),
                               ),
                             ),
-                            const SizedBox(height: 20.0),
+                            const SizedBox(height: 10.0),
                             const Padding(
                               padding: EdgeInsets.symmetric(horizontal: 20.0),
                               child: Text(
-                                'Address:',
+                                'Reservation Date:',
                                 style: TextStyle(
                                   fontSize: 18.0,
                                   fontWeight: FontWeight.bold,
@@ -367,27 +357,63 @@ class _nurseryScreenState extends State<nurseryScreen> {
                               ),
                             ),
                             const SizedBox(height: 5.0),
-                            Padding(
-                              padding:
-                                  const EdgeInsets.symmetric(horizontal: 20.0),
-                              child: TextField(
-                                controller: _addressController,
-                                decoration: InputDecoration(
-                                  fillColor: AppColors
-                                      .backgroundColor, // Set background color here
-                                  filled: true,
-                                  border: OutlineInputBorder(
-                                    borderRadius: BorderRadius.circular(
-                                        25.0), // Border radius here
-                                    borderSide:
-                                        BorderSide.none, // No border side
+                            SizedBox(
+                              height: 65.0,
+                              child: Padding(
+                                padding: const EdgeInsets.fromLTRB(
+                                    20.0, 0.0, 20.0, 0.0),
+                                child: ElevatedButton(
+                                  onPressed: () => _selectDate(context),
+                                  style: ElevatedButton.styleFrom(
+                                      backgroundColor:
+                                          AppColors.backgroundColor,
+                                      fixedSize: Size(
+                                          MediaQuery.of(context).size.width,
+                                          48)),
+                                  child: Text(
+                                    '${_reservationDate.year}-${_reservationDate.month}-${_reservationDate.day}',
+                                    style: const TextStyle(
+                                        fontSize: 14,
+                                        fontWeight: FontWeight.w700,
+                                        color:
+                                            Color.fromRGBO(255, 255, 255, 1)),
                                   ),
                                 ),
-                                style: const TextStyle(
-                                    color:
-                                        AppColors.WhiteColor), // Cursor color
                               ),
                             ),
+                            // const SizedBox(height: 20.0),
+                            // const Padding(
+                            //   padding: EdgeInsets.symmetric(horizontal: 20.0),
+                            //   child: Text(
+                            //     'Address:',
+                            //     style: TextStyle(
+                            //       fontSize: 18.0,
+                            //       fontWeight: FontWeight.bold,
+                            //     ),
+                            //   ),
+                            // ),
+                            // const SizedBox(height: 5.0),
+                            // Padding(
+                            //   padding:
+                            //       const EdgeInsets.symmetric(horizontal: 20.0),
+                            //   child: TextField(
+                            //     controller: _addressController,
+                            //     decoration: InputDecoration(
+                            //       fillColor: AppColors
+                            //           .backgroundColor, // Set background color here
+                            //       filled: true,
+                            //       border: OutlineInputBorder(
+                            //         borderRadius: BorderRadius.circular(
+                            //             25.0), // Border radius here
+                            //         borderSide:
+                            //             BorderSide.none, // No border side
+                            //       ),
+                            //     ),
+                            //     style: const TextStyle(
+                            //         color:
+                            //             AppColors.WhiteColor), // Cursor color
+                            //   ),
+                            // ),
                             const SizedBox(height: 10.0),
                             Padding(
                               padding: const EdgeInsets.fromLTRB(

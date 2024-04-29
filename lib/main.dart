@@ -19,6 +19,7 @@ import 'package:emergancyhub/services/ambulance.dart';
 import 'package:emergancyhub/services/intensive_care.dart';
 import 'package:emergancyhub/services/nursery.dart';
 import 'package:emergancyhub/services/quarantine.dart';
+import 'package:emergancyhub/services/blood_Donation.dart';
 
 
 void main() async {
@@ -37,7 +38,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       // Define the initial route
-      initialRoute: '/home',
+      initialRoute: '/splashscreen',
       // Define the routes
       routes: {
         '/': (context) => SignUpScreen(),
@@ -57,6 +58,7 @@ class MyApp extends StatelessWidget {
         '/intensiveCare': (context) => intensiveCareScreen(),
         '/nursery': (context) => nurseryScreen(),
         '/quarantine': (context) => quarantineScreen(),
+        '/bloodDonation': (context) => bloodDonationScreen(),
       },
     );
   }
