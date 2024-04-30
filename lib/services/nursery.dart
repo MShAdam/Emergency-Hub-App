@@ -53,7 +53,7 @@ class _nurseryScreenState extends State<nurseryScreen> {
         'address': _addressController.text,
         'gender': _genderSelected,
         'reservationDate': _reservationDate.toIso8601String(),
-        'EntryTime': _selectedTime,
+        'EntryTime': _selectedTime.toString(),
         'room': 0,
         'accepted': false,
         'removed': false
