@@ -124,8 +124,8 @@ class _SignUpScreenState extends State<SignUpScreen> {
                               if (value!.isEmpty) {
                                 return 'Please enter your phone number';
                               }
-                              if (value.length != 11) {
-                                return "phone Should Be 11 Digit !!";
+                              if (value.length != 11 || value.substring(0, 2) == "01") {
+                                return "phone Entar a valid number !!";
                               }
                               return null;
                             },

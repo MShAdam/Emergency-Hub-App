@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_database/firebase_database.dart';
+import 'package:flutter/services.dart';
 
 class intensiveCareScreen extends StatefulWidget {
   @override
@@ -45,6 +46,23 @@ class _intensiveCareScreenState extends State<intensiveCareScreen> {
         'removed': false
       }).then((value) {
         print("Data saved successfully.");
+        showDialog(
+          context: context,
+          builder: (BuildContext context) {
+            return AlertDialog(
+              title: const Text("Info"),
+              content: const Text("Request Sent Succesfully."),
+              actions: [
+                TextButton(
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                  child: const Text("Close"),
+                ),
+              ],
+            );
+          },
+        );
       }).catchError((error) {
         print("Failed to save data: $error");
       });
@@ -83,8 +101,7 @@ class _intensiveCareScreenState extends State<intensiveCareScreen> {
                               child: IconButton(
                                 icon: Icon(Icons.arrow_back),
                                 onPressed: () {
-                                  Navigator.pushNamed(
-                                      context, '/home');
+                                  Navigator.pushNamed(context, '/home');
                                 },
                               ), // Your foreground image
                             ),
@@ -92,19 +109,18 @@ class _intensiveCareScreenState extends State<intensiveCareScreen> {
                               left: 10.0,
                               top: 130.0,
                               child: SizedBox(
-                                  width:
-                                      MediaQuery.of(context).size.width * 0.25,
-                                  child: Column(
-                                    children: [
-                                      Image.asset(
-                                          'assets/img/intensive care.png'), // Replace with your image path
-                                      const Text(
-                                        'Intensive Rooms',
-                                        style: TextStyle(fontSize: 15.0),
-                                      ),
-                                    ],
-                                  ),
+                                width: MediaQuery.of(context).size.width * 0.25,
+                                child: Column(
+                                  children: [
+                                    Image.asset(
+                                        'assets/img/intensive care.png'), // Replace with your image path
+                                    const Text(
+                                      'Intensive Rooms',
+                                      style: TextStyle(fontSize: 15.0),
+                                    ),
+                                  ],
                                 ),
+                              ),
                             ),
                           ],
                         ),
@@ -133,7 +149,7 @@ class _intensiveCareScreenState extends State<intensiveCareScreen> {
                             Padding(
                               padding:
                                   const EdgeInsets.symmetric(horizontal: 20.0),
-                              child: TextField(
+                              child: TextFormField(
                                 controller: _nameController,
                                 decoration: InputDecoration(
                                   fillColor: AppColors
@@ -149,6 +165,12 @@ class _intensiveCareScreenState extends State<intensiveCareScreen> {
                                 style: const TextStyle(
                                     color:
                                         AppColors.WhiteColor), // Cursor color
+                                validator: (value) {
+                                  if (value!.isEmpty) {
+                                    return 'Please enter your name';
+                                  }
+                                  return null;
+                                },
                               ),
                             ),
                             const SizedBox(height: 10.0),
@@ -166,7 +188,7 @@ class _intensiveCareScreenState extends State<intensiveCareScreen> {
                             Padding(
                               padding:
                                   const EdgeInsets.symmetric(horizontal: 20.0),
-                              child: TextField(
+                              child: TextFormField(
                                 controller: _phoneController,
                                 decoration: InputDecoration(
                                   fillColor: AppColors
@@ -182,6 +204,21 @@ class _intensiveCareScreenState extends State<intensiveCareScreen> {
                                 style: const TextStyle(
                                     color:
                                         AppColors.WhiteColor), // Cursor color
+                                keyboardType: TextInputType.number,
+                                inputFormatters: [
+                                  FilteringTextInputFormatter.allow(
+                                      RegExp(r'[0-9]')),
+                                ],
+                                validator: (value) {
+                                  if (value!.isEmpty) {
+                                    return 'Please enter your phone number';
+                                  }
+                                  if (value.length != 11 ||
+                                      value.substring(0, 2) == "01") {
+                                    return "phone Entar a valid number !!";
+                                  }
+                                  return null;
+                                },
                               ),
                             ),
                             const SizedBox(height: 10.0),
@@ -199,7 +236,7 @@ class _intensiveCareScreenState extends State<intensiveCareScreen> {
                             Padding(
                               padding:
                                   const EdgeInsets.symmetric(horizontal: 20.0),
-                              child: TextField(
+                              child: TextFormField(
                                 controller: _ageController,
                                 decoration: InputDecoration(
                                   fillColor: AppColors
@@ -215,6 +252,20 @@ class _intensiveCareScreenState extends State<intensiveCareScreen> {
                                 style: const TextStyle(
                                     color:
                                         AppColors.WhiteColor), // Cursor color
+                                keyboardType: TextInputType.number,
+                                inputFormatters: [
+                                  FilteringTextInputFormatter.allow(
+                                      RegExp(r'[0-9]')),
+                                ],
+                                validator: (value) {
+                                  int? parsedValue = int.tryParse(value ?? "");
+                                  if (parsedValue == null ||
+                                      parsedValue < 1 ||
+                                      parsedValue > 120) {
+                                    return 'Please enter a age between 1 and 120';
+                                  }
+                                  return null;
+                                },
                               ),
                             ),
                             const SizedBox(height: 10.0),
@@ -277,7 +328,8 @@ class _intensiveCareScreenState extends State<intensiveCareScreen> {
                                 child: DropdownButton<String>(
                                   itemHeight: 65,
                                   dropdownColor: AppColors.backgroundColor,
-                                  value: _genderSelected,
+                                  // value: _genderSelected,
+                                  value: _genderSelected ?? "Male",
                                   onChanged: (String? newValue) {
                                     setState(() {
                                       _genderSelected = newValue;
@@ -322,7 +374,7 @@ class _intensiveCareScreenState extends State<intensiveCareScreen> {
                             Padding(
                               padding:
                                   const EdgeInsets.symmetric(horizontal: 20.0),
-                              child: TextField(
+                              child: TextFormField(
                                 controller: _addressController,
                                 decoration: InputDecoration(
                                   fillColor: AppColors
@@ -338,6 +390,12 @@ class _intensiveCareScreenState extends State<intensiveCareScreen> {
                                 style: const TextStyle(
                                     color:
                                         AppColors.WhiteColor), // Cursor color
+                                validator: (value) {
+                                  if (value!.isEmpty) {
+                                    return 'Please enter the address';
+                                  }
+                                  return null;
+                                },
                               ),
                             ),
                             const SizedBox(height: 10.0),
@@ -347,23 +405,6 @@ class _intensiveCareScreenState extends State<intensiveCareScreen> {
                               child: ElevatedButton(
                                 onPressed: () {
                                   _submitForm(context);
-                                  showDialog(
-                                    context: context,
-                                    builder: (BuildContext context) {
-                                      return AlertDialog(
-                                        title: Text("Info"),
-                                        content: Text("Request sent."),
-                                        actions: [
-                                          TextButton(
-                                            onPressed: () {
-                                              Navigator.of(context).pop();
-                                            },
-                                            child: Text("Close"),
-                                          ),
-                                        ],
-                                      );
-                                    },
-                                  );
                                 },
                                 style: ElevatedButton.styleFrom(
                                     backgroundColor: AppColors.backgroundColor,

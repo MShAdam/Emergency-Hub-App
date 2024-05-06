@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_database/firebase_database.dart';
+import 'package:flutter/services.dart';
 
 class bloodDonationScreen extends StatefulWidget {
   @override
@@ -12,9 +13,9 @@ class _bloodDonationScreenState extends State<bloodDonationScreen> {
   final TextEditingController _phoneController = TextEditingController();
   final TextEditingController _ageController = TextEditingController();
   // final TextEditingController _addressController = TextEditingController();
-  String? _genderSelected;
-  String? _bloodTybeSelected;
-  String? _hospitalSelected;
+  String? _genderSelected = "Male";
+  String? _bloodTybeSelected = "A+";
+  String? _hospitalSelected = "Air Force Specialized Hospital";
   DateTime _reservationDate = DateTime.now();
   TimeOfDay _selectedTime = TimeOfDay.now();
   Future<void> _selectDate(BuildContext context) async {
@@ -60,6 +61,23 @@ class _bloodDonationScreenState extends State<bloodDonationScreen> {
         'removed': false
       }).then((value) {
         print("Data saved successfully.");
+        showDialog(
+          context: context,
+          builder: (BuildContext context) {
+            return AlertDialog(
+              title: const Text("Info"),
+              content: const Text("Request Sent Succesfully."),
+              actions: [
+                TextButton(
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                  child: const Text("Close"),
+                ),
+              ],
+            );
+          },
+        );
       }).catchError((error) {
         print("Failed to save data: $error");
       });
@@ -146,7 +164,7 @@ class _bloodDonationScreenState extends State<bloodDonationScreen> {
                             Padding(
                               padding:
                                   const EdgeInsets.symmetric(horizontal: 20.0),
-                              child: TextField(
+                              child: TextFormField(
                                 controller: _nameController,
                                 decoration: InputDecoration(
                                   fillColor: AppColors
@@ -162,6 +180,12 @@ class _bloodDonationScreenState extends State<bloodDonationScreen> {
                                 style: const TextStyle(
                                     color:
                                         AppColors.WhiteColor), // Cursor color
+                                validator: (value) {
+                                  if (value!.isEmpty) {
+                                    return 'Please enter your name';
+                                  }
+                                  return null;
+                                },
                               ),
                             ),
                             const SizedBox(height: 10.0),
@@ -179,7 +203,7 @@ class _bloodDonationScreenState extends State<bloodDonationScreen> {
                             Padding(
                               padding:
                                   const EdgeInsets.symmetric(horizontal: 20.0),
-                              child: TextField(
+                              child: TextFormField(
                                 controller: _phoneController,
                                 decoration: InputDecoration(
                                   fillColor: AppColors
@@ -195,6 +219,20 @@ class _bloodDonationScreenState extends State<bloodDonationScreen> {
                                 style: const TextStyle(
                                     color:
                                         AppColors.WhiteColor), // Cursor color
+                                        keyboardType: TextInputType.number,
+                                inputFormatters: [
+                                  FilteringTextInputFormatter.allow(
+                                      RegExp(r'[0-9]')),
+                                ],
+                                validator: (value) {
+                                  if (value!.isEmpty) {
+                                    return 'Please enter your phone number';
+                                  }
+                                  if (value.length != 11) {
+                                    return "Please entar a valid number !!";
+                                  }
+                                  return null;
+                                },
                               ),
                             ),
                             const SizedBox(height: 10.0),
@@ -212,7 +250,7 @@ class _bloodDonationScreenState extends State<bloodDonationScreen> {
                             Padding(
                               padding:
                                   const EdgeInsets.symmetric(horizontal: 20.0),
-                              child: TextField(
+                              child: TextFormField(
                                 controller: _ageController,
                                 decoration: InputDecoration(
                                   fillColor: AppColors
@@ -228,6 +266,20 @@ class _bloodDonationScreenState extends State<bloodDonationScreen> {
                                 style: const TextStyle(
                                     color:
                                         AppColors.WhiteColor), // Cursor color
+                                keyboardType: TextInputType.number,
+                                inputFormatters: [
+                                  FilteringTextInputFormatter.allow(
+                                      RegExp(r'[0-9]')),
+                                ],
+                                validator: (value) {
+                                  int? parsedValue = int.tryParse(value ?? "");
+                                  if (parsedValue == null ||
+                                      parsedValue < 18 ||
+                                      parsedValue > 60) {
+                                    return 'Please enter a age between 18 and 60';
+                                  }
+                                  return null;
+                                },
                               ),
                             ),
                             const SizedBox(height: 10.0),
@@ -254,7 +306,7 @@ class _bloodDonationScreenState extends State<bloodDonationScreen> {
                                 child: DropdownButton<String>(
                                   itemHeight: 65,
                                   dropdownColor: AppColors.backgroundColor,
-                                  value: _bloodTybeSelected,
+                                  value: _bloodTybeSelected ?? "A+",
                                   onChanged: (String? newValue) {
                                     setState(() {
                                       _bloodTybeSelected = newValue;
@@ -316,7 +368,8 @@ class _bloodDonationScreenState extends State<bloodDonationScreen> {
                                 child: DropdownButton<String>(
                                   itemHeight: 65,
                                   dropdownColor: AppColors.backgroundColor,
-                                  value: _genderSelected,
+                                  value: _genderSelected ?? "Male",
+                                  // value: _genderSelected,s
                                   onChanged: (String? newValue) {
                                     setState(() {
                                       _genderSelected = newValue;
@@ -406,7 +459,7 @@ class _bloodDonationScreenState extends State<bloodDonationScreen> {
                                 child: DropdownButton<String>(
                                   itemHeight: 65,
                                   dropdownColor: AppColors.backgroundColor,
-                                  value: _hospitalSelected,
+                                  value: _hospitalSelected ?? "Air Force Specialized Hospital",
                                   onChanged: (String? newValue) {
                                     setState(() {
                                       _hospitalSelected = newValue;
@@ -467,23 +520,6 @@ class _bloodDonationScreenState extends State<bloodDonationScreen> {
                               child: ElevatedButton(
                                 onPressed: () {
                                   _submitForm(context);
-                                  showDialog(
-                                    context: context,
-                                    builder: (BuildContext context) {
-                                      return AlertDialog(
-                                        title: Text("Info"),
-                                        content: Text("Request sent."),
-                                        actions: [
-                                          TextButton(
-                                            onPressed: () {
-                                              Navigator.of(context).pop();
-                                            },
-                                            child: Text("Close"),
-                                          ),
-                                        ],
-                                      );
-                                    },
-                                  );
                                 },
                                 style: ElevatedButton.styleFrom(
                                     backgroundColor: AppColors.backgroundColor,

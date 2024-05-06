@@ -146,7 +146,7 @@ class _SigninScreenState extends State<SigninScreen> {
                             obscureText: true,
                             validator: (value) {
                               if (value!.isEmpty) {
-                                return 'Please enter a password';
+                                return 'Please enter your password';
                               }
                               return null;
                             },

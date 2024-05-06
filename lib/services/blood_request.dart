@@ -2,22 +2,22 @@ import 'package:flutter/material.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/services.dart';
 
-class ambulanceScreen extends StatefulWidget {
+class bloodRequestScreen extends StatefulWidget {
   @override
-  State<ambulanceScreen> createState() => _ambulanceScreenState();
+  State<bloodRequestScreen> createState() => _bloodRequestScreenState();
 }
 
-class _ambulanceScreenState extends State<ambulanceScreen> {
+class _bloodRequestScreenState extends State<bloodRequestScreen> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   final TextEditingController _nameController = TextEditingController();
   final TextEditingController _phoneController = TextEditingController();
   final TextEditingController _ageController = TextEditingController();
-  final TextEditingController _addressController = TextEditingController();
-  String? _genderSelected = 'Male';
-  String? _timeSelected;
+  // final TextEditingController _addressController = TextEditingController();
+  String? _genderSelected = "Male";
+  String? _bloodTybeSelected = "A+";
+  String? _hospitalSelected = "Air Force Specialized Hospital";
   DateTime _reservationDate = DateTime.now();
-  bool _isNow = true;
-
+  TimeOfDay _selectedTime = TimeOfDay.now();
   Future<void> _selectDate(BuildContext context) async {
     final DateTime? picked = await showDatePicker(
       context: context,
@@ -32,18 +32,30 @@ class _ambulanceScreenState extends State<ambulanceScreen> {
     }
   }
 
+  Future<void> _selectTime(BuildContext context) async {
+    final TimeOfDay? picked = await showTimePicker(
+      context: context,
+      initialTime: _selectedTime,
+    );
+    if (picked != null && picked != _selectedTime) {
+      setState(() {
+        _selectedTime = picked;
+      });
+    }
+  }
+
   void _submitForm(BuildContext context) async {
     if (_formKey.currentState!.validate()) {
       final databaseReference = FirebaseDatabase.instance.reference();
 
-      databaseReference.child('/requests/ambulance').push().set({
+      databaseReference.child('/requests/bloodRequest').push().set({
         'name': _nameController.text,
         'phone': _phoneController.text,
         'age': _ageController.text,
-        'address': _addressController.text,
+        'hospital': _hospitalSelected,
         'gender': _genderSelected,
-        'time': _timeSelected,
         'reservationDate': _reservationDate.toIso8601String(),
+        'bloodType': _bloodTybeSelected,
         'room': 0,
         'accepted': false,
         'removed': false
@@ -109,22 +121,22 @@ class _ambulanceScreenState extends State<ambulanceScreen> {
                               ), // Your foreground image
                             ),
                             Positioned(
-                              left: 10.0,
-                              top: 130.0,
-                              child: SizedBox(
-                                width: MediaQuery.of(context).size.width * 0.25,
-                                child: Column(
-                                  children: [
-                                    Image.asset(
-                                        'assets/img/Ambulance.png'), // Replace with your image path
-                                    const Text(
-                                      'Ambulance',
-                                      style: TextStyle(fontSize: 20.0),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            ),
+                                left: 10.0,
+                                top: 130.0,
+                                child: SizedBox(
+                                  width:
+                                      MediaQuery.of(context).size.width * 0.25,
+                                  child: Column(
+                                    children: [
+                                      Image.asset(
+                                          'assets/img/Blood request.png'), // Replace with your image path
+                                      const Text(
+                                        'Blood Request',
+                                        style: TextStyle(fontSize: 15.0),
+                                      ),
+                                    ],
+                                  ),
+                                )),
                           ],
                         ),
                         Container(
@@ -216,9 +228,8 @@ class _ambulanceScreenState extends State<ambulanceScreen> {
                                   if (value!.isEmpty) {
                                     return 'Please enter your phone number';
                                   }
-                                  if (value.length != 11 ||
-                                      value.substring(0, 2) == "01") {
-                                    return "phone Entar a valid number !!";
+                                  if (value.length != 11) {
+                                    return "Please entar a valid number !!";
                                   }
                                   return null;
                                 },
@@ -275,7 +286,7 @@ class _ambulanceScreenState extends State<ambulanceScreen> {
                             const Padding(
                               padding: EdgeInsets.symmetric(horizontal: 20.0),
                               child: Text(
-                                'Time:',
+                                'Blood Type:',
                                 style: TextStyle(
                                   fontSize: 18.0,
                                   fontWeight: FontWeight.bold,
@@ -295,16 +306,10 @@ class _ambulanceScreenState extends State<ambulanceScreen> {
                                 child: DropdownButton<String>(
                                   itemHeight: 65,
                                   dropdownColor: AppColors.backgroundColor,
-                                  value: _timeSelected ?? "Now",
+                                  value: _bloodTybeSelected ?? "A+",
                                   onChanged: (String? newValue) {
                                     setState(() {
-                                      if (newValue == "Another Time") {
-                                        _isNow = false;
-                                        _reservationDate = DateTime.now();
-                                      } else {
-                                        _isNow = true;
-                                      }
-                                      _timeSelected = newValue;
+                                      _bloodTybeSelected = newValue;
                                     });
                                   },
                                   isExpanded: true,
@@ -316,7 +321,70 @@ class _ambulanceScreenState extends State<ambulanceScreen> {
                                   style: const TextStyle(
                                       color: AppColors
                                           .WhiteColor), // Dropdown text color
-                                  items: <String>['Now', 'Another Time']
+                                  items: <String>[
+                                    'A+',
+                                    'A-',
+                                    'B+',
+                                    'B-',
+                                    'AB+',
+                                    'AB-',
+                                    'O+',
+                                    'O-'
+                                  ].map<DropdownMenuItem<String>>(
+                                      (String value) {
+                                    return DropdownMenuItem<String>(
+                                      value: value,
+                                      child: Padding(
+                                        padding: const EdgeInsets.symmetric(
+                                            horizontal: 10.0),
+                                        child: Text(value),
+                                      ),
+                                    );
+                                  }).toList(),
+                                ),
+                              ),
+                            ),
+                            const SizedBox(height: 10.0),
+                            const Padding(
+                              padding: EdgeInsets.symmetric(horizontal: 20.0),
+                              child: Text(
+                                'Gender:',
+                                style: TextStyle(
+                                  fontSize: 18.0,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                            ),
+                            const SizedBox(height: 10.0),
+                            Padding(
+                              padding:
+                                  const EdgeInsets.symmetric(horizontal: 20.0),
+                              child: Container(
+                                decoration: BoxDecoration(
+                                  color: AppColors
+                                      .backgroundColor, // Background fill color
+                                  borderRadius: BorderRadius.circular(25.0),
+                                ),
+                                child: DropdownButton<String>(
+                                  itemHeight: 65,
+                                  dropdownColor: AppColors.backgroundColor,
+                                  value: _genderSelected ?? "Male",
+                                  // value: _genderSelected,s
+                                  onChanged: (String? newValue) {
+                                    setState(() {
+                                      _genderSelected = newValue;
+                                    });
+                                  },
+                                  isExpanded: true,
+                                  underline:
+                                      const SizedBox(), // Remove underline
+                                  icon: const Icon(Icons.arrow_drop_down,
+                                      color: AppColors
+                                          .WhiteColor), // Dropdown arrow color
+                                  style: const TextStyle(
+                                      color: AppColors
+                                          .WhiteColor), // Dropdown text color
+                                  items: <String>['Male', 'Female']
                                       .map<DropdownMenuItem<String>>(
                                           (String value) {
                                     return DropdownMenuItem<String>(
@@ -349,9 +417,7 @@ class _ambulanceScreenState extends State<ambulanceScreen> {
                                 padding: const EdgeInsets.fromLTRB(
                                     20.0, 0.0, 20.0, 0.0),
                                 child: ElevatedButton(
-                                  onPressed: !_isNow
-                                      ? () => _selectDate(context)
-                                      : null,
+                                  onPressed: () => _selectDate(context),
                                   style: ElevatedButton.styleFrom(
                                       backgroundColor:
                                           AppColors.backgroundColor,
@@ -369,18 +435,18 @@ class _ambulanceScreenState extends State<ambulanceScreen> {
                                 ),
                               ),
                             ),
-                            const SizedBox(height: 10.0),
+                            const SizedBox(height: 20.0),
                             const Padding(
                               padding: EdgeInsets.symmetric(horizontal: 20.0),
                               child: Text(
-                                'Gender:',
+                                'Hospital:',
                                 style: TextStyle(
                                   fontSize: 18.0,
                                   fontWeight: FontWeight.bold,
                                 ),
                               ),
                             ),
-                            const SizedBox(height: 10.0),
+                            const SizedBox(height: 5.0),
                             Padding(
                               padding:
                                   const EdgeInsets.symmetric(horizontal: 20.0),
@@ -393,11 +459,11 @@ class _ambulanceScreenState extends State<ambulanceScreen> {
                                 child: DropdownButton<String>(
                                   itemHeight: 65,
                                   dropdownColor: AppColors.backgroundColor,
-                                  value: _genderSelected ?? "Male",
-                                  // value: _genderSelected,
+                                  value: _hospitalSelected ??
+                                      "Air Force Specialized Hospital",
                                   onChanged: (String? newValue) {
                                     setState(() {
-                                      _genderSelected = newValue;
+                                      _hospitalSelected = newValue;
                                     });
                                   },
                                   isExpanded: true,
@@ -409,9 +475,12 @@ class _ambulanceScreenState extends State<ambulanceScreen> {
                                   style: const TextStyle(
                                       color: AppColors
                                           .WhiteColor), // Dropdown text color
-                                  items: <String>['Male', 'Female']
-                                      .map<DropdownMenuItem<String>>(
-                                          (String value) {
+                                  items: <String>[
+                                    'Air Force Specialized Hospital',
+                                    'As-Salam International Hospital',
+                                    'Heliopolis Hospital'
+                                  ].map<DropdownMenuItem<String>>(
+                                      (String value) {
                                     return DropdownMenuItem<String>(
                                       value: value,
                                       child: Padding(
@@ -424,45 +493,27 @@ class _ambulanceScreenState extends State<ambulanceScreen> {
                                 ),
                               ),
                             ),
-                            const SizedBox(height: 20.0),
-                            const Padding(
-                              padding: EdgeInsets.symmetric(horizontal: 20.0),
-                              child: Text(
-                                'Address:',
-                                style: TextStyle(
-                                  fontSize: 18.0,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
-                            ),
-                            const SizedBox(height: 5.0),
-                            Padding(
-                              padding:
-                                  const EdgeInsets.symmetric(horizontal: 20.0),
-                              child: TextFormField(
-                                controller: _addressController,
-                                decoration: InputDecoration(
-                                  fillColor: AppColors
-                                      .backgroundColor, // Set background color here
-                                  filled: true,
-                                  border: OutlineInputBorder(
-                                    borderRadius: BorderRadius.circular(
-                                        25.0), // Border radius here
-                                    borderSide:
-                                        BorderSide.none, // No border side
-                                  ),
-                                ),
-                                style: const TextStyle(
-                                    color:
-                                        AppColors.WhiteColor), // Cursor color
-                                validator: (value) {
-                                  if (value!.isEmpty) {
-                                    return 'Please enter the address';
-                                  }
-                                  return null;
-                                },
-                              ),
-                            ),
+                            // Padding(
+                            //   padding:
+                            //       const EdgeInsets.symmetric(horizontal: 20.0),
+                            //   child: TextField(
+                            //     controller: _addressController,
+                            //     decoration: InputDecoration(
+                            //       fillColor: AppColors
+                            //           .backgroundColor, // Set background color here
+                            //       filled: true,
+                            //       border: OutlineInputBorder(
+                            //         borderRadius: BorderRadius.circular(
+                            //             25.0), // Border radius here
+                            //         borderSide:
+                            //             BorderSide.none, // No border side
+                            //       ),
+                            //     ),
+                            //     style: const TextStyle(
+                            //         color:
+                            //             AppColors.WhiteColor), // Cursor color
+                            //   ),
+                            // ),
                             const SizedBox(height: 10.0),
                             Padding(
                               padding: const EdgeInsets.fromLTRB(
