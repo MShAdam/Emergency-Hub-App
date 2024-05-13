@@ -1,8 +1,11 @@
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:emergancyhub/signup.dart';
 import 'package:emergancyhub/onboard/splashscreen.dart';
+import 'package:emergancyhub/profile/profile.dart';
+import 'package:emergancyhub/globals.dart' as global;
 
 class SigninScreen extends StatefulWidget {
   @override
@@ -33,7 +36,13 @@ class _SigninScreenState extends State<SigninScreen> {
           password: _passwordController.text.trim(),
         );
 
+        _getUserByEmail(_emailController.text.trim());
+        
         // Navigate to home page after successful login
+        // Navigator.push(
+        //   context,
+        //   MaterialPageRoute(builder: (context) => profileScreen()),
+        // ).then((_) => setState(() {}));
         Navigator.pushReplacementNamed(context, '/home');
       } catch (e) {
         setState(() {
@@ -46,6 +55,26 @@ class _SigninScreenState extends State<SigninScreen> {
     }
   }
 
+  final _database = FirebaseDatabase.instance; // Initialize Firebase Database
+
+  Future _getUserByEmail(String email) async {
+    try {
+      final usersRef = _database.ref('/users');
+      final snapshot =
+          await usersRef.orderByChild('email').equalTo(email).once();
+      if (snapshot.snapshot.exists) {
+        global.user_key = snapshot.snapshot.children.first.key;
+        global.loggedin = true;
+      } else {
+        return null; // No user found
+      }
+    } catch (error) {
+      print(error); // Handle potential errors here
+      return null;
+    }
+  }
+
+  bool _obscureText = true;
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -133,6 +162,7 @@ class _SigninScreenState extends State<SigninScreen> {
                           ),
                           TextFormField(
                             controller: _passwordController,
+                            obscureText: _obscureText,
                             decoration: InputDecoration(
                               hintText: "Password",
                               border: OutlineInputBorder(
@@ -141,9 +171,21 @@ class _SigninScreenState extends State<SigninScreen> {
                                 LoginIcon.lock,
                                 color: Color.fromARGB(255, 1, 1, 1),
                               ),
-                              suffixIcon: const Icon(LoginIcon.visibility),
+                              suffixIcon: IconButton(
+                                icon: Icon(
+                                  _obscureText
+                                      ? Icons.visibility_off
+                                      : Icons.visibility,
+                                ),
+                                onPressed: () {
+                                  setState(() {
+                                    _obscureText = !_obscureText;
+                                  });
+                                },
+                              ),
+                              // suffixIcon: const Icon(LoginIcon.visibility,),
                             ),
-                            obscureText: true,
+                            // obscureText: true,
                             validator: (value) {
                               if (value!.isEmpty) {
                                 return 'Please enter your password';

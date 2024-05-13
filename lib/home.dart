@@ -1,3 +1,4 @@
+import 'package:emergancyhub/profile/profile.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
@@ -35,62 +36,51 @@ class _homeScreenState extends State<homeScreen> {
                             ),
                           ],
                         ),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            const Text(
-                              "Find your service",
-                              style: TextStyle(
-                                color: Colors.black,
-                                fontSize: 26,
-                                fontWeight: FontWeight.w700,
-                              ),
-                            ),
-                            ElevatedButton.icon(
-                              onPressed: () {},
-                              icon: const Icon(
-                                Icons.notifications,
-                                color: Colors.black,
-                                size: 20.0,
-                              ),
-                              label: const Text('2'),
-                            ),
-                          ],
-                        ),
-                        SizedBox(
-                          height: MediaQuery.of(context).size.height * 0.0190,
-                        ),
-                        Container(
-                          width: MediaQuery.of(context).size.width *
-                              0.85, // Ensures 85% width
-                          padding: const EdgeInsets.fromLTRB(10.0, 0, 10.0, 0),
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(25.0),
-                            border: Border.all(
-                              // Add borders
-                              color: AppColors
-                                  .primaryColor, // Change color as needed
-                              width: 1.0, // Change border width as needed
-                            ),
-                          ),
+                        Padding(
+                          padding:
+                              const EdgeInsets.fromLTRB(30.0, 0.0, 30.0, 0.0),
                           child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
-                              const Icon(
-                                Icons.search,
-                                color: AppColors.primaryColor,
-                              ),
-                              const SizedBox(width: 10.0),
-                              Expanded(
-                                child: TextFormField(
-                                  decoration: const InputDecoration(
-                                    hintText:
-                                        "Search doctor, drugs, articles...",
-                                    hintStyle: TextStyle(
-                                        color: AppColors.primaryColor),
-                                    border: InputBorder
-                                        .none, // Remove default border
+                              Stack(
+                                children: [
+                                  CircleAvatar(
+                                    backgroundImage: NetworkImage(
+                                        'https://firebasestorage.googleapis.com/v0/b/emergency-hub-e6079.appspot.com/o/png-transparent-profile-logo-computer-icons-user-user-blue-heroes-logo-thumbnail.png?alt=media&token=08682b5a-3b87-4f63-a550-52a6cd021905'), // Replace this URL with your image URL
+                                    radius: 30.0,
                                   ),
+                                  Positioned(
+                                    bottom: 0,
+                                    right: 0,
+                                    child: ElevatedButton(
+                                      onPressed: () {
+                                        // Add your button onPressed logic
+                                        Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                              builder: (context) =>
+                                                  profileScreen()),
+                                        ).then((_) => setState(() {}));
+                                      },
+                                      style: ElevatedButton.styleFrom(
+                                        shape: CircleBorder(),
+                                        backgroundColor: Colors.transparent,
+                                        padding: EdgeInsets.all(0),
+                                        minimumSize: Size(60.0, 60.0),
+                                      ),
+                                      child: null,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                              ElevatedButton.icon(
+                                onPressed: () {},
+                                icon: const Icon(
+                                  Icons.notifications,
+                                  color: Colors.black,
+                                  size: 20.0,
                                 ),
+                                label: const Text('2'),
                               ),
                             ],
                           ),
@@ -209,8 +199,7 @@ class _homeScreenState extends State<homeScreen> {
                               width: MediaQuery.of(context).size.width * 0.45,
                               child: TextButton(
                                 onPressed: () {
-                                  Navigator.pushNamed(
-                                      context, '/bloodRequest');
+                                  Navigator.pushNamed(context, '/bloodRequest');
                                 },
                                 child: Column(
                                   children: [

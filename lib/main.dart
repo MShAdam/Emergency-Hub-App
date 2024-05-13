@@ -1,3 +1,4 @@
+import 'package:emergancyhub/profile/profile.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'firebase_options.dart';
@@ -21,11 +22,13 @@ import 'package:emergancyhub/services/nursery.dart';
 import 'package:emergancyhub/services/quarantine.dart';
 import 'package:emergancyhub/services/blood_Donation.dart';
 import 'package:emergancyhub/services/blood_request.dart';
+import 'package:emergancyhub/profile/history.dart';
+// import 'package:emergancyhub/profile/profile.dart';
 
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  
+
   // Initialize Firebase with DefaultFirebaseOptions
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
@@ -39,7 +42,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       // Define the initial route
-      initialRoute: '/standardRooms',
+      initialRoute: '/signin',
       // Define the routes
       routes: {
         '/': (context) => SignUpScreen(),
@@ -61,6 +64,8 @@ class MyApp extends StatelessWidget {
         '/quarantine': (context) => quarantineScreen(),
         '/bloodDonation': (context) => bloodDonationScreen(),
         '/bloodRequest': (context) => bloodRequestScreen(),
+        '/history': (context) => historyScreen(),
+        // '/profile': (context) => profileScreen(),
       },
     );
   }

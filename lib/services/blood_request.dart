@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/services.dart';
+import 'package:emergancyhub/globals.dart' as global;
 
 class bloodRequestScreen extends StatefulWidget {
   @override
@@ -58,7 +59,8 @@ class _bloodRequestScreenState extends State<bloodRequestScreen> {
         'bloodType': _bloodTybeSelected,
         'room': 0,
         'accepted': false,
-        'removed': false
+        'removed': false,
+        'userkey': global.user_key
       }).then((value) {
         print("Data saved successfully.");
         showDialog(
@@ -180,6 +182,11 @@ class _bloodRequestScreenState extends State<bloodRequestScreen> {
                                 style: const TextStyle(
                                     color:
                                         AppColors.WhiteColor), // Cursor color
+                                keyboardType: TextInputType.text,
+                                inputFormatters: [
+                                  FilteringTextInputFormatter.allow(
+                                      RegExp(r'[a-zA-Z]')),
+                                ],
                                 validator: (value) {
                                   if (value!.isEmpty) {
                                     return 'Please enter your name';

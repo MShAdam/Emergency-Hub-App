@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/services.dart';
+import 'package:emergancyhub/globals.dart' as global;
 
 class nurseryScreen extends StatefulWidget {
   @override
@@ -57,7 +58,8 @@ class _nurseryScreenState extends State<nurseryScreen> {
         'EntryTime': _selectedTime.toString(),
         'room': 0,
         'accepted': false,
-        'removed': false
+        'removed': false,
+        'userkey': global.user_key
       }).then((value) {
         print("Data saved successfully.");
         showDialog(
@@ -179,6 +181,11 @@ class _nurseryScreenState extends State<nurseryScreen> {
                                 style: const TextStyle(
                                     color:
                                         AppColors.WhiteColor), // Cursor color
+                                keyboardType: TextInputType.text,
+                                inputFormatters: [
+                                  FilteringTextInputFormatter.allow(
+                                      RegExp(r'[a-zA-Z]')),
+                                ],
                                 validator: (value) {
                                   if (value!.isEmpty) {
                                     return 'Please enter your name';
@@ -227,8 +234,7 @@ class _nurseryScreenState extends State<nurseryScreen> {
                                   if (value!.isEmpty) {
                                     return 'Please enter your phone number';
                                   }
-                                  if (value.length != 11 ||
-                                      value.substring(0, 2) == "01") {
+                                  if (value.length != 11) {
                                     return "phone Entar a valid number !!";
                                   }
                                   return null;

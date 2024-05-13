@@ -22,7 +22,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
   final TextEditingController _lastNameController = TextEditingController();
 
   final TextEditingController _passwordController = TextEditingController();
-  
+  bool _obscureText = true;
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -124,7 +124,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                               if (value!.isEmpty) {
                                 return 'Please enter your phone number';
                               }
-                              if (value.length != 11 || value.substring(0, 2) == "01") {
+                              if (value.length != 11) {
                                 return "phone Entar a valid number !!";
                               }
                               return null;
@@ -178,6 +178,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                           ),
                           TextFormField(
                             controller: _passwordController,
+                            obscureText: _obscureText,
                             decoration: InputDecoration(
                               hintText: "Password",
                               border: OutlineInputBorder(
@@ -186,15 +187,24 @@ class _SignUpScreenState extends State<SignUpScreen> {
                                 LoginIcon.lock,
                                 color: Color.fromARGB(255, 1, 1, 1),
                               ),
-                              suffixIcon: const Icon(LoginIcon.visibility),
+                              suffixIcon: IconButton(
+                                icon: Icon(
+                                  _obscureText
+                                      ? Icons.visibility_off
+                                      : Icons.visibility,
+                                ),
+                                onPressed: () {
+                                  setState(() {
+                                    _obscureText = !_obscureText;
+                                  });
+                                },
+                              ),
+                              // suffixIcon: const Icon(LoginIcon.visibility,),
                             ),
-                            obscureText: true,
+                            // obscureText: true,
                             validator: (value) {
                               if (value!.isEmpty) {
-                                return 'Please enter a password';
-                              }
-                              if (value.length < 6) {
-                                "Password Should Be More Than 6 !!";
+                                return 'Please enter your password';
                               }
                               return null;
                             },
@@ -253,8 +263,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
 
   void _submitForm(BuildContext context) async {
     if (_formKey.currentState!.validate()) {
-      setState(() {
-      });
+      setState(() {});
 
       try {
         final UserCredential userCredential =
@@ -286,8 +295,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
         Example:
         Navigator.pushReplacementNamed(context, '/signin');
       } catch (e) {
-        setState(() {
-        });
+        setState(() {});
         print('Error: $e');
         // Handle error
         // Example: Show error message to user
