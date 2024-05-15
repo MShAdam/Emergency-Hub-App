@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:emergancyhub/globals.dart' as global;
+import 'package:intl/intl.dart' as intl;
 
 class historyScreen extends StatefulWidget {
   @override
@@ -11,6 +12,9 @@ class historyScreen extends StatefulWidget {
 class _historyScreenState extends State<historyScreen> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   late List<Map<dynamic, dynamic>> history = [];
+  late String date = '';
+  late String Time = '';
+
   @override
   void initState() {
     super.initState();
@@ -36,16 +40,20 @@ class _historyScreenState extends State<historyScreen> {
         for (var key in data.keys) {
           var req = data[key];
           for (var reqData in req.values) {
-            print(key);
+            // print(key);
             if (reqData.containsKey("userkey")) {
               if (reqData['userkey'] == global.user_key) {
                 Map<dynamic, dynamic> hist = reqData;
                 hist['key'] = key;
+                hist['date'] = intl.DateFormat('yyyy-MM-dd')
+                    .format(DateTime.parse(hist["reservationDate"]));
+                hist['time'] = intl.DateFormat('hh:mm a')
+                    .format(DateTime.parse(hist["reservationDate"]));
                 history.add(hist);
-                print(hist);
+                // print(hist);
               }
             }
-            print(reqData);
+            // print(reqData);
           }
         }
         print("history: $history");
@@ -115,29 +123,31 @@ class _historyScreenState extends State<historyScreen> {
                                 Status = "accepted";
                               } else if (history[index]["removed"]) {
                                 Status = "Refused";
+                              } else {
+                                Status = 'N\\A';
                               }
                               String message = """
-                    Pationt Name: ${history[index]["name"]}
-                    Pationt Phone: ${history[index]["phone"]}
-                    Pationt age: ${history[index]["age"]}
-                    Pationt room: ${history[index]["room"]}
+                    Date: ${history[index]["date"]}
+                    Time: ${history[index]["time"]}
+                    Patient Name: ${history[index]["name"]}
+                    Patient Phone: ${history[index]["phone"]}
+                    Patient age: ${history[index]["age"]}
+                    Patient room: ${history[index]["room"]}
                     Request Status: $Status
                                 """;
                               return ListTile(
                                 title: Text(history[index]["key"]!,
                                     style: TextStyle(
-                                      // Apply text style for title
-                                      fontSize: 18.0,
-                                      fontWeight: FontWeight.bold,
-                                      color: AppColors.textColor
-                                    )),
+                                        // Apply text style for title
+                                        fontSize: 18.0,
+                                        fontWeight: FontWeight.bold,
+                                        color: AppColors.textColor)),
                                 subtitle: Text(message,
                                     style: TextStyle(
-                                      // Apply text style for title
-                                      fontSize: 16.0,
-                                      fontWeight: FontWeight.bold,
-                                      color: AppColors.primaryColor
-                                    )),
+                                        // Apply text style for title
+                                        fontSize: 16.0,
+                                        fontWeight: FontWeight.bold,
+                                        color: AppColors.primaryColor)),
                                 onTap: () {
                                   // Handle tap on list item (if needed)
                                 },

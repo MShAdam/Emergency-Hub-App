@@ -42,7 +42,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       // Define the initial route
-      initialRoute: '/signin',
+      initialRoute: '/splashscreen',
       // Define the routes
       routes: {
         '/': (context) => SignUpScreen(),
