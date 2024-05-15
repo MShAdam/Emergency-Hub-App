@@ -14,7 +14,7 @@ class _standardRoomsScreenState extends State<standardRoomsScreen> {
   final TextEditingController _phoneController = TextEditingController();
   final TextEditingController _ageController = TextEditingController();
   final TextEditingController _addressController = TextEditingController();
-  String? _genderSelected;
+  String? _genderSelected = 'Male';
   DateTime _reservationDate = DateTime.now();
 
   Future<void> _selectDate(BuildContext context) async {
@@ -42,7 +42,7 @@ class _standardRoomsScreenState extends State<standardRoomsScreen> {
         'address': _addressController.text,
         'gender': _genderSelected,
         'reservationDate': _reservationDate.toIso8601String(),
-        'room': 0,
+        'room': '',
         'accepted': false,
         'removed': false,
         'userkey': global.user_key

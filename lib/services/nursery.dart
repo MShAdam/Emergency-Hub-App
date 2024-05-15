@@ -15,7 +15,7 @@ class _nurseryScreenState extends State<nurseryScreen> {
   final TextEditingController _ageController = TextEditingController();
   final TextEditingController _addressController = TextEditingController();
   final TextEditingController _EntryTimeController = TextEditingController();
-  String? _genderSelected;
+  String? _genderSelected = 'Male';
   DateTime _reservationDate = DateTime.now();
   TimeOfDay _selectedTime = TimeOfDay.now();
   Future<void> _selectDate(BuildContext context) async {
@@ -56,7 +56,7 @@ class _nurseryScreenState extends State<nurseryScreen> {
         'gender': _genderSelected,
         'reservationDate': _reservationDate.toIso8601String(),
         'EntryTime': _selectedTime.toString(),
-        'room': 0,
+        'room': '',
         'accepted': false,
         'removed': false,
         'userkey': global.user_key
