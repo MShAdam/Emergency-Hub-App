@@ -60,7 +60,9 @@ class _bloodDonationScreenState extends State<bloodDonationScreen> {
         'room': 0,
         'accepted': false,
         'removed': false,
-        'userkey': global.user_key
+        'userkey': global.user_key,
+        'notifapp': true,
+        'notifweb': true,
       }).then((value) {
         print("Data saved successfully.");
         showDialog(
@@ -185,7 +187,7 @@ class _bloodDonationScreenState extends State<bloodDonationScreen> {
                                 keyboardType: TextInputType.text,
                                 inputFormatters: [
                                   FilteringTextInputFormatter.allow(
-                                      RegExp(r'[a-zA-Z]')),
+                                      RegExp(r'[a-zA-Z ]')),
                                 ],
                                 validator: (value) {
                                   if (value!.isEmpty) {

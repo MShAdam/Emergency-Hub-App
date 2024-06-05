@@ -48,7 +48,9 @@ class _ambulanceScreenState extends State<ambulanceScreen> {
         'room': 0,
         'accepted': false,
         'removed': false,
-        'userkey': global.user_key
+        'userkey': global.user_key,
+        'notifapp': true,
+        'notifweb': true,
       }).then((value) {
         print("Data saved successfully.");
         showDialog(
@@ -171,9 +173,13 @@ class _ambulanceScreenState extends State<ambulanceScreen> {
                                     color:
                                         AppColors.WhiteColor), // Cursor color
                                 keyboardType: TextInputType.text,
+                                // inputFormatters: [
+                                //   FilteringTextInputFormatter.allow(
+                                //       RegExp(r'^[a-zA-Z]+$ ')),
+                                // ],
                                 inputFormatters: [
                                   FilteringTextInputFormatter.allow(
-                                      RegExp(r'[a-zA-Z]')),
+                                      RegExp(r'[a-zA-Z ]')),
                                 ],
                                 validator: (value) {
                                   if (value!.isEmpty) {

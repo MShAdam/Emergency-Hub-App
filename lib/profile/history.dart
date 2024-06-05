@@ -24,11 +24,9 @@ class _historyScreenState extends State<historyScreen> {
 
   Future<void> fetchDataOnce() async {
     try {
+      history = [];
       await Firebase.initializeApp();
       final database = FirebaseDatabase.instance;
-      // while (!global.loggedin) {
-      //   await Future.delayed(Duration(seconds: 1));
-      // }
 
       final reference =
           database.ref('/requests'); // Replace with your path and key
@@ -39,17 +37,21 @@ class _historyScreenState extends State<historyScreen> {
             snapshot.snapshot.value as Map<dynamic, dynamic>; // Cast to Map
         for (var key in data.keys) {
           var req = data[key];
-          for (var reqData in req.values) {
+          for (var reqKey in req.keys) {
             // print(key);
+            var reqData = req[reqKey];
             if (reqData.containsKey("userkey")) {
               if (reqData['userkey'] == global.user_key) {
                 Map<dynamic, dynamic> hist = reqData;
                 hist['key'] = key;
+                hist['reqkey'] = reqKey;
+                hist['notifapp'] = reqData['notifapp'];
                 hist['date'] = intl.DateFormat('yyyy-MM-dd')
                     .format(DateTime.parse(hist["reservationDate"]));
                 hist['time'] = intl.DateFormat('hh:mm a')
                     .format(DateTime.parse(hist["reservationDate"]));
                 history.add(hist);
+
                 // print(hist);
               }
             }
@@ -67,6 +69,17 @@ class _historyScreenState extends State<historyScreen> {
     } catch (error) {
       print('Error fetching data: $error');
     }
+  }
+
+  final DatabaseReference _database = FirebaseDatabase.instance.reference();
+  void _updateNotifApp(String path) {
+    _database.child(path).update({
+      'notifapp': false,
+    }).then((_) {
+      print('Notification app status updated to false');
+    }).catchError((error) {
+      print('Failed to update notification app status: $error');
+    });
   }
 
   @override
@@ -135,13 +148,18 @@ class _historyScreenState extends State<historyScreen> {
                     Patient room: ${history[index]["room"]}
                     Request Status: $Status
                                 """;
+                              var titleColor = AppColors.textColor;
+                              if (history[index]["notifapp"]) {
+                                titleColor =
+                                    const Color.fromARGB(255, 255, 64, 70);
+                              }
                               return ListTile(
                                 title: Text(history[index]["key"]!,
                                     style: TextStyle(
                                         // Apply text style for title
                                         fontSize: 18.0,
                                         fontWeight: FontWeight.bold,
-                                        color: AppColors.textColor)),
+                                        color: titleColor)),
                                 subtitle: Text(message,
                                     style: TextStyle(
                                         // Apply text style for title
@@ -150,10 +168,19 @@ class _historyScreenState extends State<historyScreen> {
                                         color: AppColors.primaryColor)),
                                 onTap: () {
                                   // Handle tap on list item (if needed)
+                                  _updateNotifApp('/requests/' +
+                                      history[index]["key"] +
+                                      '/' +
+                                      history[index]["reqkey"]);
+                                  Navigator.pushReplacementNamed(
+                                      context, '/history');
                                 },
                               );
                             },
                           ),
+                        ),
+                        SizedBox(
+                          height: MediaQuery.of(context).size.height * 0.23,
                         ),
                       ],
                     ),

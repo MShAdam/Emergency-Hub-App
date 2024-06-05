@@ -59,7 +59,9 @@ class _nurseryScreenState extends State<nurseryScreen> {
         'room': '',
         'accepted': false,
         'removed': false,
-        'userkey': global.user_key
+        'userkey': global.user_key,
+        'notifapp': true,
+        'notifweb': true,
       }).then((value) {
         print("Data saved successfully.");
         showDialog(
@@ -184,7 +186,7 @@ class _nurseryScreenState extends State<nurseryScreen> {
                                 keyboardType: TextInputType.text,
                                 inputFormatters: [
                                   FilteringTextInputFormatter.allow(
-                                      RegExp(r'[a-zA-Z]')),
+                                      RegExp(r'[a-zA-Z ]')),
                                 ],
                                 validator: (value) {
                                   if (value!.isEmpty) {

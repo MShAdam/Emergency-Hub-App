@@ -1,7 +1,9 @@
 import 'package:emergancyhub/profile/profile.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_database/firebase_database.dart';
+import 'package:emergancyhub/globals.dart' as global;
+import 'package:intl/intl.dart' as intl;
 
 class homeScreen extends StatefulWidget {
   @override
@@ -10,6 +12,47 @@ class homeScreen extends StatefulWidget {
 
 class _homeScreenState extends State<homeScreen> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+  int notifyNumber = 0;
+
+  @override
+  void initState() {
+    super.initState();
+    // Call the function to fetch data when the page initializes
+    fetchDataOnce();
+  }
+
+  Future<void> fetchDataOnce() async {
+    try {
+      await Firebase.initializeApp();
+      final database = FirebaseDatabase.instance;
+
+      final reference =
+          database.ref('/requests'); // Replace with your path and key
+
+      final snapshot = await reference.once();
+      if (snapshot.snapshot.exists) {
+        final data =
+            snapshot.snapshot.value as Map<dynamic, dynamic>; // Cast to Map
+        for (var key in data.keys) {
+          var req = data[key];
+          for (var reqData in req.values) {
+            // print(key);
+            if (reqData.containsKey("userkey")) {
+              if (reqData['userkey'] == global.user_key) {
+                if (reqData['notifapp']) {
+                  notifyNumber++;
+                }
+              }
+            }
+          }
+        }
+      } else {
+        print('No data available');
+      }
+    } catch (error) {
+      print('Error fetching data: $error');
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -74,13 +117,16 @@ class _homeScreenState extends State<homeScreen> {
                                 ],
                               ),
                               ElevatedButton.icon(
-                                onPressed: () {},
+                                onPressed: () {
+                                  Navigator.pushReplacementNamed(
+                                      context, '/history');
+                                },
                                 icon: const Icon(
                                   Icons.notifications,
                                   color: Colors.black,
                                   size: 20.0,
                                 ),
-                                label: const Text('2'),
+                                label: Text(notifyNumber.toString()),
                               ),
                             ],
                           ),
@@ -269,28 +315,37 @@ class _homeScreenState extends State<homeScreen> {
                           child: Column(children: [
                             Padding(
                               padding: const EdgeInsets.fromLTRB(
-                                  8.0, 15.0, 8.0, 15.0),
+                                  8.0, 15.0, 10.0, 15.0),
                               child: Row(
                                 mainAxisAlignment:
                                     MainAxisAlignment.spaceBetween,
                                 children: [
-                                  const Text(
-                                    'I can Help You\nand fix your problem', // Replace with your text
-                                    style: TextStyle(
-                                        color: Colors.black, fontSize: 35),
-                                    textAlign: TextAlign.left,
+                                  const Padding(
+                                    padding: EdgeInsets.all(8.0),
+                                    child: Text(
+                                      'I can Help You\nand fix your problem', // Replace with your text
+                                      style: TextStyle(
+                                          color: Colors.black, fontSize: 25),
+                                      textAlign: TextAlign.left,
+                                    ),
                                   ),
-                                  Image.asset('assets/img/bottom_img.png'),
+                                  Image.asset(
+                                    'assets/img/bottom_img.png',
+                                    width:
+                                        MediaQuery.of(context).size.width * 0.4,
+                                    height: MediaQuery.of(context).size.height *
+                                        0.1,
+                                  ),
                                 ],
                               ),
                             ),
                             Align(
-                              alignment: Alignment(-0.8, -1.0),
+                              alignment: const Alignment(-0.8, -1.0),
                               child: ElevatedButton(
                                 onPressed: () {},
                                 style: ElevatedButton.styleFrom(
                                     backgroundColor: AppColors.primaryColor,
-                                    fixedSize: Size(150, 48)),
+                                    fixedSize: const Size(150, 48)),
                                 child: const Text(
                                   'Contact Us ',
                                   style: TextStyle(

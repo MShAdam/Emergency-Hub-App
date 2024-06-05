@@ -130,8 +130,9 @@ class _profileScreenState extends State<profileScreen> {
                           },
                           style: ElevatedButton.styleFrom(
                               backgroundColor: AppColors.primaryColor,
-                              fixedSize:
-                                  Size(MediaQuery.of(context).size.width * 0.75, 48)),
+                              fixedSize: Size(
+                                  MediaQuery.of(context).size.width * 0.75,
+                                  48)),
                           child: const Text(
                             'History',
                             style: TextStyle(
@@ -147,8 +148,9 @@ class _profileScreenState extends State<profileScreen> {
                           },
                           style: ElevatedButton.styleFrom(
                               backgroundColor: AppColors.primaryColor,
-                              fixedSize:
-                                  Size(MediaQuery.of(context).size.width * 0.75, 48)),
+                              fixedSize: Size(
+                                  MediaQuery.of(context).size.width * 0.75,
+                                  48)),
                           child: const Text(
                             'Log Out',
                             style: TextStyle(
@@ -156,6 +158,9 @@ class _profileScreenState extends State<profileScreen> {
                                 fontWeight: FontWeight.w700,
                                 color: Color.fromRGBO(255, 255, 255, 1)),
                           ),
+                        ),
+                        SizedBox(
+                          height: MediaQuery.of(context).size.height * 0.32,
                         ),
                       ],
                     ),

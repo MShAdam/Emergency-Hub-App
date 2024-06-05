@@ -23,6 +23,7 @@ import 'package:emergancyhub/services/quarantine.dart';
 import 'package:emergancyhub/services/blood_Donation.dart';
 import 'package:emergancyhub/services/blood_request.dart';
 import 'package:emergancyhub/profile/history.dart';
+import 'package:emergancyhub/1.dart' as test;
 // import 'package:emergancyhub/profile/profile.dart';
 
 
@@ -42,11 +43,11 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       // Define the initial route
-      initialRoute: '/splashscreen',
+      initialRoute: '/signup',
       // Define the routes
       routes: {
         '/': (context) => SignUpScreen(),
-        '/test': (context) => PhoneAuthScreen(),
+        '/test': (context) => test.HomeScreen(),
         '/signup': (context) => SignUpScreen(),
         '/signin': (context) => SigninScreen(),
         '/home': (context) => homeScreen(),
