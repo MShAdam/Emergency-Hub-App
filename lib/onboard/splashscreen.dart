@@ -25,6 +25,7 @@ class _splashScreenScreenState extends State<splashScreenScreen> {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      debugShowCheckedModeBanner: false,
         home: Container(
                     decoration: const BoxDecoration(
                       image: DecorationImage(

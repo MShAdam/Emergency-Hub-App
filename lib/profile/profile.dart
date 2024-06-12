@@ -2,6 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:emergancyhub/globals.dart' as global;
+import 'package:firebase_storage/firebase_storage.dart';
+import 'package:image_picker/image_picker.dart';
+import 'dart:io';
 
 class profileScreen extends StatefulWidget {
   @override
@@ -10,6 +13,11 @@ class profileScreen extends StatefulWidget {
 
 class _profileScreenState extends State<profileScreen> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+  File? _imageFile;
+  final String? userId = global.user_key; // Replace with your actual user ID
+  final FirebaseStorage _storage = FirebaseStorage.instance;
+  final DatabaseReference _database =
+      FirebaseDatabase.instance.reference().child("users");
 
   String _username = '';
   String _email = '';
@@ -20,6 +28,31 @@ class _profileScreenState extends State<profileScreen> {
     super.initState();
     // Call the function to fetch data when the page initializes
     fetchDataOnce();
+  }
+
+  Future<void> _pickImage() async {
+    final pickedFile =
+        await ImagePicker().pickImage(source: ImageSource.gallery);
+    if (pickedFile != null) {
+      setState(() {
+        _imageFile = File(pickedFile.path);
+      });
+      _uploadImage();
+    }
+  }
+
+  Future<void> _uploadImage() async {
+    if (_imageFile != null) {
+      String fileName = 'profile_$userId.jpg';
+      try {
+        await _storage.ref('profile_images/$fileName').putFile(_imageFile!);
+        String downloadUrl =
+            await _storage.ref('profile_images/$fileName').getDownloadURL();
+        await _database.child(userId!).update({'profileImageUrl': downloadUrl});
+      } catch (e) {
+        print(e);
+      }
+    }
   }
 
   // Function to fetch data from Firebase
@@ -100,10 +133,65 @@ class _profileScreenState extends State<profileScreen> {
                         Column(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: <Widget>[
-                            CircleAvatar(
-                              radius: 50,
-                              backgroundImage: NetworkImage(
-                                  'https://firebasestorage.googleapis.com/v0/b/emergency-hub-e6079.appspot.com/o/png-transparent-profile-logo-computer-icons-user-user-blue-heroes-logo-thumbnail.png?alt=media&token=08682b5a-3b87-4f63-a550-52a6cd021905'),
+                            StreamBuilder<DatabaseEvent>(
+                              stream: _database.child(userId!).onValue,
+                              builder: (context, snapshot) {
+                                if (snapshot.connectionState ==
+                                    ConnectionState.waiting) {
+                                  return CircularProgressIndicator();
+                                }
+                                if (snapshot.hasError) {
+                                  return Text('Error: ${snapshot.error}');
+                                }
+                                if (snapshot.hasData &&
+                                    snapshot.data!.snapshot.value != null) {
+                                  var userDoc =
+                                      snapshot.data!.snapshot.value as Map;
+                                  var imageUrl = userDoc['profileImageUrl'];
+                                  return Stack(
+                                    // alignment: Alignment.center,
+                                    children: [
+                                      CircleAvatar(
+                                        radius: 50,
+                                        backgroundImage: imageUrl != null
+                                            ? NetworkImage(imageUrl)
+                                            : null,
+                                        child: imageUrl == null
+                                            ? Icon(Icons.person, size: 50)
+                                            : null,
+                                      ),
+                                      Positioned(
+                                        bottom: -10,
+                                        right: -5,
+                                        child: IconButton(
+                                          icon: Icon(Icons.camera_alt),
+                                          onPressed: _pickImage,
+                                          tooltip: 'Upload Image',
+                                        ),
+                                      ),
+                                    ],
+                                  );
+                                } else {
+                                  return Stack(
+                                    // alignment: Alignment.center,
+                                    children: [
+                                      CircleAvatar(
+                                        radius: 50,
+                                        child: Icon(Icons.person, size: 50),
+                                      ),
+                                      Positioned(
+                                        bottom: -10,
+                                        right: -5,
+                                        child: IconButton(
+                                          icon: Icon(Icons.camera_alt),
+                                          onPressed: _pickImage,
+                                          tooltip: 'Upload Image',
+                                        ),
+                                      ),
+                                    ],
+                                  );
+                                }
+                              },
                             ),
                             SizedBox(height: 20),
                             Text(

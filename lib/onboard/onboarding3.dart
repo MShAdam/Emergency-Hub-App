@@ -4,6 +4,7 @@ class onboard3Screen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      debugShowCheckedModeBanner: false,
         home: Directionality(
             textDirection: TextDirection.ltr,
             child: Scaffold(
@@ -75,6 +76,9 @@ class onboard3Screen extends StatelessWidget {
                                   fontWeight: FontWeight.w700,
                                   color: AppColors.primaryColor),
                             ),
+                          ),
+                          SizedBox(
+                            height: MediaQuery.of(context).size.height * 0.035,
                           ),
                         ],
                       ),

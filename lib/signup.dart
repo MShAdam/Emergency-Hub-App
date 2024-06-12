@@ -56,9 +56,9 @@ class _SignUpScreenState extends State<SignUpScreen> {
                             /////////////////////////////////////
                             ///
                             ///
-                            SizedBox(
-                              height: MediaQuery.of(context).size.height * 0.05,
-                            ),
+                            // SizedBox(
+                            //   height: MediaQuery.of(context).size.height * 0.05,
+                            // ),
                             const Align(
                               alignment: Alignment(-0.7, -0.5),
                               child: Text(

@@ -127,7 +127,7 @@ class _historyScreenState extends State<historyScreen> {
                         ),
                         SizedBox(
                           height: MediaQuery.of(context).size.height *
-                              0.5, // Adjust height as needed
+                              0.9, // Adjust height as needed
                           child: ListView.builder(
                             itemCount: history.length,
                             itemBuilder: (context, index) {
@@ -180,7 +180,7 @@ class _historyScreenState extends State<historyScreen> {
                           ),
                         ),
                         SizedBox(
-                          height: MediaQuery.of(context).size.height * 0.23,
+                          height: MediaQuery.of(context).size.height * 0.001,
                         ),
                       ],
                     ),

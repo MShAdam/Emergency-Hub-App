@@ -1,8 +1,12 @@
+import 'dart:io';
+
 import 'package:emergancyhub/profile/profile.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:emergancyhub/globals.dart' as global;
+import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart' as intl;
 
 class homeScreen extends StatefulWidget {
@@ -14,11 +18,28 @@ class _homeScreenState extends State<homeScreen> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   int notifyNumber = 0;
 
+  File? _imageFile;
+  final String userId = "exampleUserId"; // Replace with your actual user ID
+  final FirebaseStorage _storage = FirebaseStorage.instance;
+  final DatabaseReference _database =
+      FirebaseDatabase.instance.reference().child("users");
+
   @override
   void initState() {
     super.initState();
     // Call the function to fetch data when the page initializes
     fetchDataOnce();
+  }
+
+  Future<void> _pickImage() async {
+    final pickedFile =
+        await ImagePicker().pickImage(source: ImageSource.gallery);
+    if (pickedFile != null) {
+      setState(() {
+        _imageFile = File(pickedFile.path);
+      });
+      // _uploadImage();
+    }
   }
 
   Future<void> fetchDataOnce() async {
@@ -87,32 +108,89 @@ class _homeScreenState extends State<homeScreen> {
                             children: [
                               Stack(
                                 children: [
-                                  CircleAvatar(
-                                    backgroundImage: NetworkImage(
-                                        'https://firebasestorage.googleapis.com/v0/b/emergency-hub-e6079.appspot.com/o/png-transparent-profile-logo-computer-icons-user-user-blue-heroes-logo-thumbnail.png?alt=media&token=08682b5a-3b87-4f63-a550-52a6cd021905'), // Replace this URL with your image URL
-                                    radius: 30.0,
-                                  ),
-                                  Positioned(
-                                    bottom: 0,
-                                    right: 0,
-                                    child: ElevatedButton(
-                                      onPressed: () {
-                                        // Add your button onPressed logic
-                                        Navigator.push(
-                                          context,
-                                          MaterialPageRoute(
-                                              builder: (context) =>
-                                                  profileScreen()),
-                                        ).then((_) => setState(() {}));
-                                      },
-                                      style: ElevatedButton.styleFrom(
-                                        shape: CircleBorder(),
-                                        backgroundColor: Colors.transparent,
-                                        padding: EdgeInsets.all(0),
-                                        minimumSize: Size(60.0, 60.0),
-                                      ),
-                                      child: null,
-                                    ),
+                                  StreamBuilder<DatabaseEvent>(
+                                    stream: _database.child(userId).onValue,
+                                    builder: (context, snapshot) {
+                                      if (snapshot.connectionState ==
+                                          ConnectionState.waiting) {
+                                        return CircularProgressIndicator();
+                                      }
+                                      if (snapshot.hasError) {
+                                        return Text('Error: ${snapshot.error}');
+                                      }
+                                      if (snapshot.hasError) {
+                                        return Text('Error: ${snapshot.error}');
+                                      }
+                                      if (snapshot.hasData &&
+                                          snapshot.data!.snapshot.value !=
+                                              null) {
+                                        var userDoc = snapshot
+                                            .data!.snapshot.value as Map;
+                                        var imageUrl =
+                                            userDoc['profileImageUrl'];
+                                        return Stack(
+                                          alignment: Alignment.center,
+                                          children: [
+                                            CircleAvatar(
+                                              radius: 50,
+                                              backgroundImage: imageUrl != null
+                                                  ? NetworkImage(imageUrl)
+                                                  : null,
+                                              child: imageUrl == null
+                                                  ? Icon(Icons.person, size: 50)
+                                                  : null,
+                                            ),
+                                            Positioned(
+                                              bottom: -10,
+                                              // right: -5,
+                                              child: IconButton(
+                                                icon: Icon(Icons.edit),
+                                                onPressed: () {
+                                                  // Add your button onPressed logic
+                                                  Navigator.push(
+                                                    context,
+                                                    MaterialPageRoute(
+                                                        builder: (context) =>
+                                                            profileScreen()),
+                                                  ).then(
+                                                      (_) => setState(() {}));
+                                                },
+                                                tooltip: 'Upload Image',
+                                              ),
+                                            ),
+                                          ],
+                                        );
+                                      } else {
+                                        return Stack(
+                                          alignment: Alignment.center,
+                                          children: [
+                                            CircleAvatar(
+                                              radius: 50,
+                                              child:
+                                                  Icon(Icons.person, size: 50),
+                                            ),
+                                            Positioned(
+                                              bottom: -10,
+                                              // right: -5,
+                                              child: IconButton(
+                                                icon: Icon(Icons.edit),
+                                                onPressed: () {
+                                                  // Add your button onPressed logic
+                                                  Navigator.push(
+                                                    context,
+                                                    MaterialPageRoute(
+                                                        builder: (context) =>
+                                                            profileScreen()),
+                                                  ).then(
+                                                      (_) => setState(() {}));
+                                                },
+                                                tooltip: 'Upload Image',
+                                              ),
+                                            ),
+                                          ],
+                                        );
+                                      }
+                                    },
                                   ),
                                 ],
                               ),
@@ -132,7 +210,7 @@ class _homeScreenState extends State<homeScreen> {
                           ),
                         ),
                         SizedBox(
-                          height: MediaQuery.of(context).size.height * 0.0190,
+                          height: MediaQuery.of(context).size.height * 0.1,
                         ),
                         const Align(
                           alignment: Alignment(-0.8, -1.0),
@@ -345,9 +423,9 @@ class _homeScreenState extends State<homeScreen> {
                                 onPressed: () {},
                                 style: ElevatedButton.styleFrom(
                                     backgroundColor: AppColors.primaryColor,
-                                    fixedSize: const Size(150, 48)),
+                                    fixedSize: const Size(200, 48)),
                                 child: const Text(
-                                  'Contact Us ',
+                                  'Contact Us: +201234321345',
                                   style: TextStyle(
                                       fontSize: 14,
                                       fontWeight: FontWeight.w700,

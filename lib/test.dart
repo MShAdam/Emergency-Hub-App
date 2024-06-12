@@ -1,80 +1,56 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_storage/firebase_storage.dart';
+import 'package:firebase_database/firebase_database.dart';
+import 'package:image_picker/image_picker.dart';
+import 'dart:io';
 
-class PhoneAuthScreen extends StatefulWidget {
-  @override
-  _PhoneAuthScreenState createState() => _PhoneAuthScreenState();
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp();
+  runApp(MyApp());
 }
 
-class _PhoneAuthScreenState extends State<PhoneAuthScreen> {
-  final FirebaseAuth _auth = FirebaseAuth.instance;
-  String _phoneNumber = '';
-  String _verificationId = '';
-
-  final _phoneController = TextEditingController();
-  final _codeController = TextEditingController();
-
+class MyApp extends StatelessWidget {
   @override
-  void dispose() {
-    _phoneController.dispose();
-    _codeController.dispose();
-    super.dispose();
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      home: ProfileScreen(),
+    );
   }
+}
 
-  Future<void> verifyPhoneNumber(String phoneNumber) async {
-    try {
-      await _auth.verifyPhoneNumber(
-        phoneNumber: phoneNumber,
-        verificationCompleted: (PhoneAuthCredential credential) async {
-          await _auth.signInWithCredential(credential);
-          // User is automatically signed in
-          // Handle successful sign-up here (e.g., navigate to home screen)
-          print('User signed in automatically!');
-        },
-        verificationFailed: (FirebaseAuthException e) {
-          if (e.code == 'invalid-phone-number') {
-            print('The provided phone number is invalid.');
-          } else {
-            print('An error occurred during verification: ${e.message}');
-          }
-        },
-        codeSent: (String verificationId, int? resendToken) {
-          setState(() {
-            _verificationId = verificationId;
-          });
-          print('Verification code sent to the phone number!');
-        },
-        codeAutoRetrievalTimeout: (String verificationId) {
-          setState(() {
-            _verificationId = verificationId;
-          });
-          print('Code retrieval timed out. Use resend token.');
-        },
-      );
-    } catch (e) {
-      print('Error verifying phone number: $e');
+class ProfileScreen extends StatefulWidget {
+  @override
+  _ProfileScreenState createState() => _ProfileScreenState();
+}
+
+class _ProfileScreenState extends State<ProfileScreen> {
+  File? _imageFile;
+  final String userId = "exampleUserId";  // Replace with your actual user ID
+  final FirebaseStorage _storage = FirebaseStorage.instance;
+  final DatabaseReference _database = FirebaseDatabase.instance.reference().child("users");
+
+  Future<void> _pickImage() async {
+    final pickedFile = await ImagePicker().pickImage(source: ImageSource.gallery);
+    if (pickedFile != null) {
+      setState(() {
+        _imageFile = File(pickedFile.path);
+      });
+      _uploadImage();
     }
   }
 
-  Future<void> signInWithVerificationCode(
-      String verificationId, String verificationCode) async {
-    try {
-      PhoneAuthCredential credential = PhoneAuthProvider.credential(
-          verificationId: verificationId, smsCode: verificationCode);
-
-      await _auth.signInWithCredential(credential);
-
-      // User is signed in!
-      // Handle successful sign-up here (e.g., navigate to home screen)
-      print('User signed in with verification code!');
-    } on FirebaseAuthException catch (e) {
-      if (e.code == 'invalid-verification-code') {
-        print('The provided verification code is invalid.');
-      } else {
-        print('An error occurred during sign in: ${e.message}');
+  Future<void> _uploadImage() async {
+    if (_imageFile != null) {
+      String fileName = 'profile_$userId.jpg';
+      try {
+        await _storage.ref('profile_images/$fileName').putFile(_imageFile!);
+        String downloadUrl = await _storage.ref('profile_images/$fileName').getDownloadURL();
+        await _database.child(userId).update({'profileImageUrl': downloadUrl});
+      } catch (e) {
+        print(e);
       }
-    } catch (e) {
-      print('Error signing in with verification code: $e');
     }
   }
 
@@ -82,39 +58,64 @@ class _PhoneAuthScreenState extends State<PhoneAuthScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Phone Sign-Up'),
+        title: Text('Profile'),
       ),
-      body: Padding(
-        padding: EdgeInsets.all(20.0),
+      body: Center(
         child: Column(
-          children: [
-            TextField(
-              controller: _phoneController,
-              decoration: InputDecoration(
-                labelText: 'Phone Number',
-                hintText: '+1 234-567-8900',
-              ),
-              keyboardType: TextInputType.phone,
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: <Widget>[
+            StreamBuilder<DatabaseEvent>(
+              stream: _database.child(userId).onValue,
+              builder: (context, snapshot) {
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return CircularProgressIndicator();
+                }
+                if (snapshot.hasError) {
+                  return Text('Error: ${snapshot.error}');
+                }
+                if (snapshot.hasData && snapshot.data!.snapshot.value != null) {
+                  var userDoc = snapshot.data!.snapshot.value as Map;
+                  var imageUrl = userDoc['profileImageUrl'];
+                  return Stack(
+                    children: [
+                      CircleAvatar(
+                        radius: 50,
+                        backgroundImage: imageUrl != null ? NetworkImage(imageUrl) : null,
+                        child: imageUrl == null ? Icon(Icons.person, size: 50) : null,
+                      ),
+                      Positioned(
+                        bottom: 0,
+                        right: 0,
+                        child: IconButton(
+                          icon: Icon(Icons.camera_alt),
+                          onPressed: _pickImage,
+                          tooltip: 'Upload Image',
+                        ),
+                      ),
+                    ],
+                  );
+                } else {
+                  return Stack(
+                    children: [
+                      CircleAvatar(
+                        radius: 50,
+                        child: Icon(Icons.person, size: 50),
+                      ),
+                      Positioned(
+                        bottom: 0,
+                        right: 0,
+                        child: IconButton(
+                          icon: Icon(Icons.camera_alt),
+                          onPressed: _pickImage,
+                          tooltip: 'Upload Image',
+                        ),
+                      ),
+                    ],
+                  );
+                }
+              },
             ),
-            SizedBox(height: 20.0),
-            ElevatedButton(
-              onPressed: () => verifyPhoneNumber(_phoneController.text.trim()),
-              child: Text('Send Verification Code'),
-            ),
-            SizedBox(height: 20.0),
-            TextField(
-              controller: _codeController,
-              decoration: InputDecoration(
-                labelText: 'Verification Code',
-              ),
-              keyboardType: TextInputType.number,
-            ),
-            SizedBox(height: 20.0),
-            ElevatedButton(
-              onPressed: () => signInWithVerificationCode(
-                  _verificationId, _codeController.text.trim()),
-              child: Text('Sign Up'),
-            ),
+            SizedBox(height: 20),
           ],
         ),
       ),
