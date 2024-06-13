@@ -19,7 +19,7 @@ class _homeScreenState extends State<homeScreen> {
   int notifyNumber = 0;
 
   File? _imageFile;
-  final String userId = "exampleUserId"; // Replace with your actual user ID
+  final String? userId = global.user_key; // Replace with your actual user ID
   final FirebaseStorage _storage = FirebaseStorage.instance;
   final DatabaseReference _database =
       FirebaseDatabase.instance.reference().child("users");
@@ -109,7 +109,7 @@ class _homeScreenState extends State<homeScreen> {
                               Stack(
                                 children: [
                                   StreamBuilder<DatabaseEvent>(
-                                    stream: _database.child(userId).onValue,
+                                    stream: _database.child(userId!).onValue,
                                     builder: (context, snapshot) {
                                       if (snapshot.connectionState ==
                                           ConnectionState.waiting) {

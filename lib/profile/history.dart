@@ -3,6 +3,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:emergancyhub/globals.dart' as global;
 import 'package:intl/intl.dart' as intl;
+import 'package:emergancyhub/profile/history.dart';
 
 class historyScreen extends StatefulWidget {
   @override
@@ -45,7 +46,9 @@ class _historyScreenState extends State<historyScreen> {
                 Map<dynamic, dynamic> hist = reqData;
                 hist['key'] = key;
                 hist['reqkey'] = reqKey;
-                hist['notifapp'] = reqData['notifapp'];
+                hist['notifapp'] = reqData.containsKey('notifapp')
+                    ? reqData['notifapp']
+                    : false;
                 hist['date'] = intl.DateFormat('yyyy-MM-dd')
                     .format(DateTime.parse(hist["reservationDate"]));
                 hist['time'] = intl.DateFormat('hh:mm a')
@@ -139,7 +142,30 @@ class _historyScreenState extends State<historyScreen> {
                               } else {
                                 Status = 'N\\A';
                               }
-                              String message = """
+                              String message = "";
+                              if (history[index]["key"] == "ambulance") {
+                                message = """
+                    Date: ${history[index]["date"]}
+                    Time: ${history[index]["time"]}
+                    Patient Name: ${history[index]["name"]}
+                    Patient Phone: ${history[index]["phone"]}
+                    Patient age: ${history[index]["age"]}
+                    Car number: ${history[index]["room"]}
+                    Request Status: $Status
+                                """;
+                              } else if (history[index]["key"] ==
+                                      "bloodDonation" ||
+                                  history[index]["key"] == "bloodRequest") {
+                                message = """
+                    Date: ${history[index]["date"]}
+                    Time: ${history[index]["time"]}
+                    Patient Name: ${history[index]["name"]}
+                    Patient Phone: ${history[index]["phone"]}
+                    Patient age: ${history[index]["age"]}
+                    Request Status: $Status
+                                """;
+                              } else {
+                                message = """
                     Date: ${history[index]["date"]}
                     Time: ${history[index]["time"]}
                     Patient Name: ${history[index]["name"]}
@@ -148,8 +174,10 @@ class _historyScreenState extends State<historyScreen> {
                     Patient room: ${history[index]["room"]}
                     Request Status: $Status
                                 """;
+                              }
+
                               var titleColor = AppColors.textColor;
-                              if (history[index]["notifapp"]) {
+                              if (history[index]["notifapp"] == true) {
                                 titleColor =
                                     const Color.fromARGB(255, 255, 64, 70);
                               }

@@ -107,7 +107,7 @@ class _SigninScreenState extends State<SigninScreen> {
 
                             /////////////////////////////////////
                             SizedBox(
-                              height: MediaQuery.of(context).size.height * 0.17,
+                              height: MediaQuery.of(context).size.height * 0.07,
                             ),
                             const Align(
                               // alignment: Alignment(-0.7, -0.5),
@@ -262,7 +262,7 @@ class _SigninScreenState extends State<SigninScreen> {
                                     SizedBox(
                                       height:
                                           MediaQuery.of(context).size.height *
-                                              0.194,
+                                              0.294,
                                     ),
                                   ],
                                 ),
