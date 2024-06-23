@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:emergancyhub/signin.dart';
+import 'package:flutter/services.dart';
 
 class SignUpScreen extends StatefulWidget {
   @override
@@ -152,6 +153,11 @@ class _SignUpScreenState extends State<SignUpScreen> {
                                   color: AppColors.text2_Color,
                                 ),
                               ),
+                              keyboardType: TextInputType.text,
+                              inputFormatters: [
+                                FilteringTextInputFormatter.allow(
+                                    RegExp(r'[a-zA-Z @#]')),
+                              ],
                               validator: (value) {
                                 if (value!.isEmpty) {
                                   return 'Please enter your first name';
@@ -175,6 +181,11 @@ class _SignUpScreenState extends State<SignUpScreen> {
                                 ),
                                 // suffixIcon: Icon(LoginIcon.visibility),
                               ),
+                              keyboardType: TextInputType.text,
+                              inputFormatters: [
+                                FilteringTextInputFormatter.allow(
+                                    RegExp(r'[a-zA-Z @#]')),
+                              ],
                               validator: (value) {
                                 if (value!.isEmpty) {
                                   return 'Please enter your last name';

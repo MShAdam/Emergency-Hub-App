@@ -60,7 +60,7 @@ class _nurseryScreenState extends State<nurseryScreen> {
         'accepted': false,
         'removed': false,
         'userkey': global.user_key,
-        'notifapp': true,
+        'notifapp': false,
         'notifweb': true,
       }).then((value) {
         print("Data saved successfully.");
@@ -128,14 +128,15 @@ class _nurseryScreenState extends State<nurseryScreen> {
                                 top: 130.0,
                                 child: SizedBox(
                                   width:
-                                      MediaQuery.of(context).size.width * 0.25,
+                                      MediaQuery.of(context).size.width * 0.30,
                                   child: Column(
                                     children: [
                                       Image.asset(
-                                          'assets/img/Nursery.png'), // Replace with your image path
+                                          'assets/img/Nursery.png',
+                                        height: 45.0,), // Replace with your image path
                                       const Text(
                                         'Nursery',
-                                        style: TextStyle(fontSize: 15.0),
+                                        style: TextStyle(fontSize: 16.0),
                                       ),
                                     ],
                                   ),

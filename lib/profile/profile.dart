@@ -1,5 +1,5 @@
-import 'package:emergancyhub/profile/history.dart';
-import 'package:emergancyhub/home.dart';
+// import 'package:emergancyhub/profile/history.dart';
+// import 'package:emergancyhub/home.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_database/firebase_database.dart';
@@ -121,12 +121,12 @@ class _profileScreenState extends State<profileScreen> {
                               child: IconButton(
                                 icon: Icon(Icons.arrow_back),
                                 onPressed: () {
-                                  Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                        builder: (context) => homeScreen()),
-                                  );
-                                  // Navigator.pushNamed(context, '/home');
+                                  // Navigator.push(
+                                  //   context,
+                                  //   MaterialPageRoute(
+                                  //       builder: (context) => homeScreen()),
+                                  // );
+                                  Navigator.pushNamed(context, '/home');
                                 },
                               ), // Your foreground image
                             ),
@@ -221,12 +221,12 @@ class _profileScreenState extends State<profileScreen> {
                         const SizedBox(height: 30),
                         ElevatedButton(
                           onPressed: () {
-                            // Navigator.pushReplacementNamed(context, '/history');
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => historyScreen()),
-                            );
+                            Navigator.pushReplacementNamed(context, '/history');
+                            // Navigator.push(
+                            //   context,
+                            //   MaterialPageRoute(
+                            //       builder: (context) => historyScreen()),
+                            // );
                           },
                           style: ElevatedButton.styleFrom(
                               backgroundColor: AppColors.primaryColor,

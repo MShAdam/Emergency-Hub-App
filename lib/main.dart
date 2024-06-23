@@ -26,7 +26,6 @@ import 'package:emergancyhub/profile/history.dart';
 import 'package:emergancyhub/1.dart' as test;
 // import 'package:emergancyhub/profile/profile.dart';
 
-
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
@@ -37,6 +36,7 @@ void main() async {
 
   runApp(MyApp());
 }
+
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
   @override
@@ -51,7 +51,7 @@ class MyApp extends StatelessWidget {
         '/test': (context) => ProfileScreen(),
         '/signup': (context) => SignUpScreen(),
         '/signin': (context) => SigninScreen(),
-        '/home': (context) => homeScreen(),
+        '/home': (context) => HomeScreen(),
         '/splashscreen': (context) => splashScreenScreen(),
         '/onboard1Screen': (context) => onboard1Screen(),
         '/onboard2Screen': (context) => onboard2Screen(),
@@ -67,7 +67,10 @@ class MyApp extends StatelessWidget {
         '/bloodDonation': (context) => bloodDonationScreen(),
         '/bloodRequest': (context) => bloodRequestScreen(),
         '/history': (context) => historyScreen(),
-        // '/profile': (context) => profileScreen(),
+        '/profile': (context) => profileScreen(),
+      },
+      onUnknownRoute: (settings) {
+        return MaterialPageRoute(builder: (context) => profileScreen());
       },
     );
   }

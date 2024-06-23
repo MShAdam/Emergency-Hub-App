@@ -61,7 +61,7 @@ class _bloodRequestScreenState extends State<bloodRequestScreen> {
         'accepted': false,
         'removed': false,
         'userkey': global.user_key,
-        'notifapp': true,
+        'notifapp': false,
         'notifweb': true,
       }).then((value) {
         print("Data saved successfully.");
@@ -129,14 +129,15 @@ class _bloodRequestScreenState extends State<bloodRequestScreen> {
                                 top: 130.0,
                                 child: SizedBox(
                                   width:
-                                      MediaQuery.of(context).size.width * 0.25,
+                                      MediaQuery.of(context).size.width * 0.30,
                                   child: Column(
                                     children: [
                                       Image.asset(
-                                          'assets/img/Blood request.png'), // Replace with your image path
+                                          'assets/img/Blood request.png',
+                                        height: 45.0,), // Replace with your image path
                                       const Text(
                                         'Blood Request',
-                                        style: TextStyle(fontSize: 15.0),
+                                        style: TextStyle(fontSize: 16.0),
                                       ),
                                     ],
                                   ),

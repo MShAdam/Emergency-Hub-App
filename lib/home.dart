@@ -1,5 +1,4 @@
 import 'dart:io';
-
 import 'package:emergancyhub/profile/profile.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
@@ -7,14 +6,13 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:emergancyhub/globals.dart' as global;
 import 'package:image_picker/image_picker.dart';
-import 'package:intl/intl.dart' as intl;
 
-class homeScreen extends StatefulWidget {
+class HomeScreen extends StatefulWidget {
   @override
-  State<homeScreen> createState() => _homeScreenState();
+  State<HomeScreen> createState() => _HomeScreenState();
 }
 
-class _homeScreenState extends State<homeScreen> {
+class _HomeScreenState extends State<HomeScreen> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   int notifyNumber = 0;
 
@@ -27,7 +25,6 @@ class _homeScreenState extends State<homeScreen> {
   @override
   void initState() {
     super.initState();
-    // Call the function to fetch data when the page initializes
     fetchDataOnce();
   }
 
@@ -38,7 +35,6 @@ class _homeScreenState extends State<homeScreen> {
       setState(() {
         _imageFile = File(pickedFile.path);
       });
-      // _uploadImage();
     }
   }
 
@@ -46,7 +42,6 @@ class _homeScreenState extends State<homeScreen> {
     try {
       await Firebase.initializeApp();
       final database = FirebaseDatabase.instance;
-
       final reference =
           database.ref('/requests'); // Replace with your path and key
 
@@ -57,7 +52,6 @@ class _homeScreenState extends State<homeScreen> {
         for (var key in data.keys) {
           var req = data[key];
           for (var reqData in req.values) {
-            // print(key);
             if (reqData.containsKey("userkey")) {
               if (reqData['userkey'] == global.user_key) {
                 if (reqData['notifapp']) {
@@ -118,78 +112,66 @@ class _homeScreenState extends State<homeScreen> {
                                       if (snapshot.hasError) {
                                         return Text('Error: ${snapshot.error}');
                                       }
-                                      if (snapshot.hasError) {
-                                        return Text('Error: ${snapshot.error}');
-                                      }
-                                      if (snapshot.hasData &&
-                                          snapshot.data!.snapshot.value !=
-                                              null) {
-                                        var userDoc = snapshot
-                                            .data!.snapshot.value as Map;
-                                        var imageUrl =
-                                            userDoc['profileImageUrl'];
-                                        return Stack(
-                                          alignment: Alignment.center,
-                                          children: [
-                                            CircleAvatar(
-                                              radius: 50,
-                                              backgroundImage: imageUrl != null
-                                                  ? NetworkImage(imageUrl)
-                                                  : null,
-                                              child: imageUrl == null
-                                                  ? Icon(Icons.person, size: 50)
-                                                  : null,
+                                      // if (snapshot.hasData &&
+                                      //     snapshot.data!.snapshot.value !=
+                                      //         null) {
+                                      var userDoc = (snapshot.hasData &&
+                                              snapshot.data!.snapshot.value !=
+                                                  null)
+                                          ? snapshot.data!.snapshot.value as Map
+                                          : {};
+                                      var imageUrl = (userDoc.isNotEmpty)
+                                          ? userDoc['profileImageUrl']
+                                          : "";
+                                      return Stack(
+                                        alignment: Alignment.center,
+                                        children: [
+                                          CircleAvatar(
+                                            radius: 50,
+                                            backgroundImage: imageUrl != null
+                                                ? NetworkImage(imageUrl)
+                                                : null,
+                                            child: imageUrl == null
+                                                ? Icon(Icons.person, size: 50)
+                                                : null,
+                                          ),
+                                          Positioned(
+                                            bottom: -10,
+                                            child: IconButton(
+                                              icon: Icon(Icons.edit),
+                                              onPressed: () {
+                                                Navigator.of(context,
+                                                        rootNavigator: true)
+                                                    .pushNamed("/profile");
+                                              },
+                                              tooltip: 'Upload Image',
                                             ),
-                                            Positioned(
-                                              bottom: -10,
-                                              // right: -5,
-                                              child: IconButton(
-                                                icon: Icon(Icons.edit),
-                                                onPressed: () {
-                                                  // Add your button onPressed logic
-                                                  Navigator.push(
-                                                    context,
-                                                    MaterialPageRoute(
-                                                        builder: (context) =>
-                                                            profileScreen()),
-                                                  ).then(
-                                                      (_) => setState(() {}));
-                                                },
-                                                tooltip: 'Upload Image',
-                                              ),
-                                            ),
-                                          ],
-                                        );
-                                      } else {
-                                        return Stack(
-                                          alignment: Alignment.center,
-                                          children: [
-                                            CircleAvatar(
-                                              radius: 50,
-                                              child:
-                                                  Icon(Icons.person, size: 50),
-                                            ),
-                                            Positioned(
-                                              bottom: -10,
-                                              // right: -5,
-                                              child: IconButton(
-                                                icon: Icon(Icons.edit),
-                                                onPressed: () {
-                                                  // Add your button onPressed logic
-                                                  Navigator.push(
-                                                    context,
-                                                    MaterialPageRoute(
-                                                        builder: (context) =>
-                                                            profileScreen()),
-                                                  ).then(
-                                                      (_) => setState(() {}));
-                                                },
-                                                tooltip: 'Upload Image',
-                                              ),
-                                            ),
-                                          ],
-                                        );
-                                      }
+                                          ),
+                                        ],
+                                      );
+                                      // } else {
+                                      //   return Stack(
+                                      //     alignment: Alignment.center,
+                                      //     children: [
+                                      //       const CircleAvatar(
+                                      //         radius: 50,
+                                      //         child:
+                                      //             Icon(Icons.person, size: 50),
+                                      //       ),
+                                      //       Positioned(
+                                      //         bottom: -10,
+                                      //         child: IconButton(
+                                      //           icon: Icon(Icons.edit),
+                                      //           onPressed: () {
+                                      //             Navigator.pushNamed(
+                                      //                 context, '/profile');
+                                      //           },
+                                      //           tooltip: 'Profile',
+                                      //         ),
+                                      //       ),
+                                      //     ],
+                                      //   );
+                                      // }
                                     },
                                   ),
                                 ],

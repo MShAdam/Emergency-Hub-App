@@ -116,14 +116,15 @@ class _ambulanceScreenState extends State<ambulanceScreen> {
                               left: 10.0,
                               top: 130.0,
                               child: SizedBox(
-                                width: MediaQuery.of(context).size.width * 0.25,
+                                width: MediaQuery.of(context).size.width * 0.30,
                                 child: Column(
                                   children: [
                                     Image.asset(
-                                        'assets/img/Ambulance.png'), // Replace with your image path
+                                        'assets/img/Ambulance.png',
+                                        height: 45.0,), // Replace with your image path
                                     const Text(
                                       'Ambulance',
-                                      style: TextStyle(fontSize: 20.0),
+                                      style: TextStyle(fontSize: 16.0),
                                     ),
                                   ],
                                 ),
@@ -173,10 +174,6 @@ class _ambulanceScreenState extends State<ambulanceScreen> {
                                     color:
                                         AppColors.WhiteColor), // Cursor color
                                 keyboardType: TextInputType.text,
-                                // inputFormatters: [
-                                //   FilteringTextInputFormatter.allow(
-                                //       RegExp(r'^[a-zA-Z]+$ ')),
-                                // ],
                                 inputFormatters: [
                                   FilteringTextInputFormatter.allow(
                                       RegExp(r'[a-zA-Z ]')),

@@ -46,7 +46,7 @@ class _intensiveCareScreenState extends State<intensiveCareScreen> {
         'accepted': false,
         'removed': false,
         'userkey': global.user_key,
-        'notifapp': true,
+        'notifapp': false,
         'notifweb': true,
       }).then((value) {
         print("Data saved successfully.");
@@ -113,14 +113,15 @@ class _intensiveCareScreenState extends State<intensiveCareScreen> {
                               left: 10.0,
                               top: 130.0,
                               child: SizedBox(
-                                width: MediaQuery.of(context).size.width * 0.25,
+                                width: MediaQuery.of(context).size.width * 0.30,
                                 child: Column(
                                   children: [
                                     Image.asset(
-                                        'assets/img/intensive care.png'), // Replace with your image path
+                                        'assets/img/intensive care.png',
+                                        height: 45.0,), // Replace with your image path
                                     const Text(
                                       'Intensive Rooms',
-                                      style: TextStyle(fontSize: 15.0),
+                                      style: TextStyle(fontSize: 16.0),
                                     ),
                                   ],
                                 ),
