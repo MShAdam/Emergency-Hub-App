@@ -94,6 +94,20 @@ class _HomeScreenState extends State<HomeScreen> {
                             ),
                           ],
                         ),
+                        // SizedBox(
+                        //   height: MediaQuery.of(context).size.height * 0.05,
+                        // ),
+                        const Align(
+                          alignment: Alignment(-0.8, -1.0),
+                          child: Text(
+                            "My Profile",
+                            style: TextStyle(
+                              color: Colors.black,
+                              fontSize: 26,
+                              fontWeight: FontWeight.w700,
+                            ),
+                          ),
+                        ),
                         Padding(
                           padding:
                               const EdgeInsets.fromLTRB(30.0, 0.0, 30.0, 0.0),
@@ -144,12 +158,12 @@ class _HomeScreenState extends State<HomeScreen> {
                                               tooltip: 'Upload Image',
                                             ),
                                           ),
-                                          const Positioned(
-                                            top: 0,
-                                            child: Text(
-                                              "My Profile",
-                                            ),
-                                          ),
+                                          // const Positioned(
+                                          //   top: 0,
+                                          //   child: Text(
+                                          //     "My Profile",
+                                          //   ),
+                                          // ),
                                         ],
                                       );
                                     },
