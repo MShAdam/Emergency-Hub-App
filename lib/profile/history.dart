@@ -129,8 +129,9 @@ class _historyScreenState extends State<historyScreen> {
                           padding: const EdgeInsets.fromLTRB(10.0, 0, 10.0, 0),
                         ),
                         SizedBox(
-                          height: MediaQuery.of(context).size.height *
-                              0.9, // Adjust height as needed
+                          height: MediaQuery.of(context)
+                              .size
+                              .height, // Adjust height as needed
                           child: ListView.builder(
                             itemCount: history.length,
                             itemBuilder: (context, index) {

@@ -189,7 +189,7 @@ class _bloodDonationScreenState extends State<bloodDonationScreen> {
                                 keyboardType: TextInputType.text,
                                 inputFormatters: [
                                   FilteringTextInputFormatter.allow(
-                                      RegExp(r'[a-zA-Z ]')),
+                                      RegExp(r'^[a-zA-Z\u0600-\u06FF ]+$')),
                                 ],
                                 validator: (value) {
                                   if (value!.isEmpty) {

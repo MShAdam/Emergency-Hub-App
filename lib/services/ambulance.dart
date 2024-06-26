@@ -16,6 +16,7 @@ class _ambulanceScreenState extends State<ambulanceScreen> {
   final TextEditingController _addressController = TextEditingController();
   String? _genderSelected = 'Male';
   String? _timeSelected;
+  String? _paymentSelected = "Cash";
   DateTime _reservationDate = DateTime.now();
   bool _isNow = true;
 
@@ -51,6 +52,7 @@ class _ambulanceScreenState extends State<ambulanceScreen> {
         'userkey': global.user_key,
         'notifapp': true,
         'notifweb': true,
+        'payment': _paymentSelected,
       }).then((value) {
         print("Data saved successfully.");
         showDialog(
@@ -120,8 +122,9 @@ class _ambulanceScreenState extends State<ambulanceScreen> {
                                 child: Column(
                                   children: [
                                     Image.asset(
-                                        'assets/img/Ambulance.png',
-                                        height: 45.0,), // Replace with your image path
+                                      'assets/img/Ambulance.png',
+                                      height: 45.0,
+                                    ), // Replace with your image path
                                     const Text(
                                       'Ambulance',
                                       style: TextStyle(fontSize: 16.0),
@@ -176,7 +179,7 @@ class _ambulanceScreenState extends State<ambulanceScreen> {
                                 keyboardType: TextInputType.text,
                                 inputFormatters: [
                                   FilteringTextInputFormatter.allow(
-                                      RegExp(r'[a-zA-Z ]')),
+                                      RegExp(r'^[a-zA-Z\u0600-\u06FF ]+$')),
                                 ],
                                 validator: (value) {
                                   if (value!.isEmpty) {
@@ -470,6 +473,61 @@ class _ambulanceScreenState extends State<ambulanceScreen> {
                                   }
                                   return null;
                                 },
+                              ),
+                            ),
+                            const SizedBox(height: 10.0),
+                            const Padding(
+                              padding: EdgeInsets.symmetric(horizontal: 20.0),
+                              child: Text(
+                                'Payment:',
+                                style: TextStyle(
+                                  fontSize: 18.0,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                            ),
+                            const SizedBox(height: 10.0),
+                            Padding(
+                              padding:
+                                  const EdgeInsets.symmetric(horizontal: 20.0),
+                              child: Container(
+                                decoration: BoxDecoration(
+                                  color: AppColors
+                                      .backgroundColor, // Background fill color
+                                  borderRadius: BorderRadius.circular(25.0),
+                                ),
+                                child: DropdownButton<String>(
+                                  itemHeight: 65,
+                                  dropdownColor: AppColors.backgroundColor,
+                                  value: _paymentSelected ?? "Cash",
+                                  // value: _genderSelected,s
+                                  onChanged: (String? newValue) {
+                                    setState(() {
+                                      _paymentSelected = newValue;
+                                    });
+                                  },
+                                  isExpanded: true,
+                                  underline:
+                                      const SizedBox(), // Remove underline
+                                  icon: const Icon(Icons.arrow_drop_down,
+                                      color: AppColors
+                                          .WhiteColor), // Dropdown arrow color
+                                  style: const TextStyle(
+                                      color: AppColors
+                                          .WhiteColor), // Dropdown text color
+                                  items: <String>['Cash', 'Credit']
+                                      .map<DropdownMenuItem<String>>(
+                                          (String value) {
+                                    return DropdownMenuItem<String>(
+                                      value: value,
+                                      child: Padding(
+                                        padding: const EdgeInsets.symmetric(
+                                            horizontal: 10.0),
+                                        child: Text(value),
+                                      ),
+                                    );
+                                  }).toList(),
+                                ),
                               ),
                             ),
                             const SizedBox(height: 10.0),

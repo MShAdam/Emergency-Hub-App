@@ -15,6 +15,7 @@ class _intensiveCareScreenState extends State<intensiveCareScreen> {
   final TextEditingController _ageController = TextEditingController();
   final TextEditingController _addressController = TextEditingController();
   String? _genderSelected = 'Male';
+  String? _paymentSelected = "Cash";
   DateTime _reservationDate = DateTime.now();
 
   Future<void> _selectDate(BuildContext context) async {
@@ -48,6 +49,7 @@ class _intensiveCareScreenState extends State<intensiveCareScreen> {
         'userkey': global.user_key,
         'notifapp': false,
         'notifweb': true,
+        'payment': _paymentSelected,
       }).then((value) {
         print("Data saved successfully.");
         showDialog(
@@ -173,7 +175,7 @@ class _intensiveCareScreenState extends State<intensiveCareScreen> {
                                 keyboardType: TextInputType.text,
                                 inputFormatters: [
                                   FilteringTextInputFormatter.allow(
-                                      RegExp(r'[a-zA-Z ]')),
+                                      RegExp(r'^[a-zA-Z\u0600-\u06FF ]+$')),
                                 ],
                                 validator: (value) {
                                   if (value!.isEmpty) {
@@ -405,6 +407,61 @@ class _intensiveCareScreenState extends State<intensiveCareScreen> {
                                   }
                                   return null;
                                 },
+                              ),
+                            ),
+                            const SizedBox(height: 10.0),
+                            const Padding(
+                              padding: EdgeInsets.symmetric(horizontal: 20.0),
+                              child: Text(
+                                'Payment:',
+                                style: TextStyle(
+                                  fontSize: 18.0,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                            ),
+                            const SizedBox(height: 10.0),
+                            Padding(
+                              padding:
+                                  const EdgeInsets.symmetric(horizontal: 20.0),
+                              child: Container(
+                                decoration: BoxDecoration(
+                                  color: AppColors
+                                      .backgroundColor, // Background fill color
+                                  borderRadius: BorderRadius.circular(25.0),
+                                ),
+                                child: DropdownButton<String>(
+                                  itemHeight: 65,
+                                  dropdownColor: AppColors.backgroundColor,
+                                  value: _paymentSelected ?? "Cash",
+                                  // value: _genderSelected,s
+                                  onChanged: (String? newValue) {
+                                    setState(() {
+                                      _paymentSelected = newValue;
+                                    });
+                                  },
+                                  isExpanded: true,
+                                  underline:
+                                      const SizedBox(), // Remove underline
+                                  icon: const Icon(Icons.arrow_drop_down,
+                                      color: AppColors
+                                          .WhiteColor), // Dropdown arrow color
+                                  style: const TextStyle(
+                                      color: AppColors
+                                          .WhiteColor), // Dropdown text color
+                                  items: <String>['Cash', 'Credit']
+                                      .map<DropdownMenuItem<String>>(
+                                          (String value) {
+                                    return DropdownMenuItem<String>(
+                                      value: value,
+                                      child: Padding(
+                                        padding: const EdgeInsets.symmetric(
+                                            horizontal: 10.0),
+                                        child: Text(value),
+                                      ),
+                                    );
+                                  }).toList(),
+                                ),
                               ),
                             ),
                             const SizedBox(height: 10.0),

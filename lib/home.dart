@@ -112,9 +112,6 @@ class _HomeScreenState extends State<HomeScreen> {
                                       if (snapshot.hasError) {
                                         return Text('Error: ${snapshot.error}');
                                       }
-                                      // if (snapshot.hasData &&
-                                      //     snapshot.data!.snapshot.value !=
-                                      //         null) {
                                       var userDoc = (snapshot.hasData &&
                                               snapshot.data!.snapshot.value !=
                                                   null)
@@ -147,31 +144,14 @@ class _HomeScreenState extends State<HomeScreen> {
                                               tooltip: 'Upload Image',
                                             ),
                                           ),
+                                          const Positioned(
+                                            top: 0,
+                                            child: Text(
+                                              "My Profile",
+                                            ),
+                                          ),
                                         ],
                                       );
-                                      // } else {
-                                      //   return Stack(
-                                      //     alignment: Alignment.center,
-                                      //     children: [
-                                      //       const CircleAvatar(
-                                      //         radius: 50,
-                                      //         child:
-                                      //             Icon(Icons.person, size: 50),
-                                      //       ),
-                                      //       Positioned(
-                                      //         bottom: -10,
-                                      //         child: IconButton(
-                                      //           icon: Icon(Icons.edit),
-                                      //           onPressed: () {
-                                      //             Navigator.pushNamed(
-                                      //                 context, '/profile');
-                                      //           },
-                                      //           tooltip: 'Profile',
-                                      //         ),
-                                      //       ),
-                                      //     ],
-                                      //   );
-                                      // }
                                     },
                                   ),
                                 ],
@@ -192,7 +172,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           ),
                         ),
                         SizedBox(
-                          height: MediaQuery.of(context).size.height * 0.1,
+                          height: MediaQuery.of(context).size.height * 0.05,
                         ),
                         const Align(
                           alignment: Alignment(-0.8, -1.0),

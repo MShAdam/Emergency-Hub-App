@@ -6,6 +6,7 @@ import 'package:emergancyhub/signup.dart';
 import 'package:emergancyhub/onboard/splashscreen.dart';
 import 'package:emergancyhub/profile/profile.dart';
 import 'package:emergancyhub/globals.dart' as global;
+import 'package:flutter/services.dart';
 
 class SigninScreen extends StatefulWidget {
   @override
@@ -75,8 +76,8 @@ class _SigninScreenState extends State<SigninScreen> {
         child: Scaffold(
           body: SafeArea(
             child: SingleChildScrollView(
-              child: Padding(
-                padding: const EdgeInsets.all(15.0),
+              // child: Padding(
+              //   padding: const EdgeInsets.all(15.0),
                 child: Container(
                   color: Colors.white,
                   width: screenWidth,
@@ -117,65 +118,78 @@ class _SigninScreenState extends State<SigninScreen> {
                           ),
                         ),
                         SizedBox(height: screenHeight * 0.0190),
-                        TextFormField(
-                          controller: _emailController,
-                          decoration: InputDecoration(
-                            hintText: "Email",
-                            border: OutlineInputBorder(borderRadius: BorderRadius.circular(5)),
-                            prefixIcon: const Icon(LoginIcon.email, color: AppColors.text2_Color),
+                        Padding(
+                          padding: const EdgeInsets.all(15.0),
+                          child: TextFormField(
+                            controller: _emailController,
+                            decoration: InputDecoration(
+                              hintText: "Email",
+                              border: OutlineInputBorder(borderRadius: BorderRadius.circular(5)),
+                              prefixIcon: const Icon(LoginIcon.email, color: AppColors.text2_Color),
+                            ),
+                            keyboardType: TextInputType.emailAddress,
+                            inputFormatters: [
+                                  FilteringTextInputFormatter.allow(
+                                      RegExp(r'[a-zA-Z0-9@.]')),
+                                ],
+                            validator: (value) {
+                              if (value!.isEmpty) {
+                                return 'Please enter your email';
+                              }
+                              if (!(value.contains("@") && value.contains(".") && value.length > 8)) {
+                                return "Email Not Valid";
+                              }
+                              return null;
+                            },
                           ),
-                          keyboardType: TextInputType.emailAddress,
-                          validator: (value) {
-                            if (value!.isEmpty) {
-                              return 'Please enter your email';
-                            }
-                            if (!(value.contains("@") && value.contains(".") && value.length > 8)) {
-                              return "Email Not Valid";
-                            }
-                            return null;
-                          },
                         ),
                         SizedBox(height: screenHeight * 0.0098),
-                        TextFormField(
-                          controller: _passwordController,
-                          obscureText: _obscureText,
-                          decoration: InputDecoration(
-                            hintText: "Password",
-                            border: OutlineInputBorder(borderRadius: BorderRadius.circular(5)),
-                            prefixIcon: const Icon(LoginIcon.lock, color: Color.fromARGB(255, 1, 1, 1)),
-                            suffixIcon: IconButton(
-                              icon: Icon(_obscureText ? Icons.visibility_off : Icons.visibility),
-                              onPressed: () {
-                                setState(() {
-                                  _obscureText = !_obscureText;
-                                });
-                              },
+                        Padding(
+                          padding: const EdgeInsets.all(15.0),
+                          child: TextFormField(
+                            controller: _passwordController,
+                            obscureText: _obscureText,
+                            decoration: InputDecoration(
+                              hintText: "Password",
+                              border: OutlineInputBorder(borderRadius: BorderRadius.circular(5)),
+                              prefixIcon: const Icon(LoginIcon.lock, color: Color.fromARGB(255, 1, 1, 1)),
+                              suffixIcon: IconButton(
+                                icon: Icon(_obscureText ? Icons.visibility_off : Icons.visibility),
+                                onPressed: () {
+                                  setState(() {
+                                    _obscureText = !_obscureText;
+                                  });
+                                },
+                              ),
                             ),
+                            validator: (value) {
+                              if (value!.isEmpty) {
+                                return 'Please enter your password';
+                              }
+                              return null;
+                            },
                           ),
-                          validator: (value) {
-                            if (value!.isEmpty) {
-                              return 'Please enter your password';
-                            }
-                            return null;
-                          },
                         ),
                         const SizedBox(height: 20),
-                        ElevatedButton(
-                          onPressed: () => _submitForm(context),
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: AppColors.primaryColor,
-                            fixedSize: Size(screenWidth, 48),
-                          ),
-                          child: _isLoading
-                              ? CircularProgressIndicator(color: Colors.white)
-                              : const Text(
-                                  'Login',
-                                  style: TextStyle(
-                                    fontSize: 14,
-                                    fontWeight: FontWeight.w700,
-                                    color: Color.fromRGBO(255, 255, 255, 1),
+                        Padding(
+                          padding: const EdgeInsets.all(15),
+                          child: ElevatedButton(
+                            onPressed: () => _submitForm(context),
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: AppColors.primaryColor,
+                              fixedSize: Size(screenWidth, 48),
+                            ),
+                            child: _isLoading
+                                ? CircularProgressIndicator(color: Colors.white)
+                                : const Text(
+                                    'Login',
+                                    style: TextStyle(
+                                      fontSize: 14,
+                                      fontWeight: FontWeight.w700,
+                                      color: Color.fromRGBO(255, 255, 255, 1),
+                                    ),
                                   ),
-                                ),
+                          ),
                         ),
                         TextButton(
                           onPressed: () {
@@ -219,7 +233,7 @@ class _SigninScreenState extends State<SigninScreen> {
                     ),
                   ),
                 ),
-              ),
+              // ),
             ),
           ),
         ),

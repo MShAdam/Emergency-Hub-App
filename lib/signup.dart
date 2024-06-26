@@ -32,63 +32,64 @@ class _SignUpScreenState extends State<SignUpScreen> {
             child: Scaffold(
               body: SafeArea(
                 child: SingleChildScrollView(
-                  child: Padding(
-                    padding: const EdgeInsets.all(15.0),
-                    child: Container(
-                      color: Colors.white, //FCFCFE
-                      width: MediaQuery.of(context).size.width,
-                      child: Form(
-                        key: _formKey,
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: [
-                            Stack(
-                              children: [
-                                Image.asset('assets/img/headimg.jpg'),
-                                Positioned(
-                                  right: 10.0,
-                                  top: 25.0,
-                                  child: Image.asset(
-                                      'assets/img/logo.png'), // Your foreground image
-                                ),
-                              ],
-                            ),
+                  // child: Padding(
+                  //   padding: const EdgeInsets.all(15.0),
+                  child: Container(
+                    color: Colors.white, //FCFCFE
+                    width: MediaQuery.of(context).size.width,
+                    child: Form(
+                      key: _formKey,
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          Stack(
+                            children: [
+                              Image.asset('assets/img/headimg.jpg'),
+                              Positioned(
+                                right: 10.0,
+                                top: 25.0,
+                                child: Image.asset(
+                                    'assets/img/logo.png'), // Your foreground image
+                              ),
+                            ],
+                          ),
 
-                            /////////////////////////////////////
-                            ///
-                            ///
-                            // SizedBox(
-                            //   height: MediaQuery.of(context).size.height * 0.05,
-                            // ),
-                            const Align(
-                              alignment: Alignment(-0.7, -0.5),
-                              child: Text(
-                                "Hello Beautiful",
-                                style: TextStyle(
-                                  color: Colors.blue,
-                                  fontSize: 18,
-                                  fontWeight: FontWeight.w700,
-                                ),
+                          /////////////////////////////////////
+                          ///
+                          ///
+                          // SizedBox(
+                          //   height: MediaQuery.of(context).size.height * 0.05,
+                          // ),
+                          const Align(
+                            alignment: Alignment(-0.7, -0.5),
+                            child: Text(
+                              "Hello Beautiful",
+                              style: TextStyle(
+                                color: Colors.blue,
+                                fontSize: 18,
+                                fontWeight: FontWeight.w700,
                               ),
                             ),
-                            SizedBox(
-                              height:
-                                  MediaQuery.of(context).size.height * 0.0090,
-                            ),
-                            const Align(
-                              alignment: Alignment(-0.7, -0.5),
-                              child: Text(
-                                "Sign up",
-                                style: TextStyle(
-                                  color: Colors.blue,
-                                  fontWeight: FontWeight.w900,
-                                ),
+                          ),
+                          SizedBox(
+                            height: MediaQuery.of(context).size.height * 0.0090,
+                          ),
+                          const Align(
+                            alignment: Alignment(-0.7, -0.5),
+                            child: Text(
+                              "Sign up",
+                              style: TextStyle(
+                                color: Colors.blue,
+                                fontWeight: FontWeight.w900,
                               ),
                             ),
-                            SizedBox(
-                              height: MediaQuery.of(context).size.height * 0.07,
-                            ),
-                            TextFormField(
+                          ),
+                          // SizedBox(
+                          //   height: MediaQuery.of(context).size.height * 0.07,
+                          // ),
+                          Padding(
+                            padding: const EdgeInsets.all(15.0),
+                            child: TextFormField(
                               controller: _emailController,
                               decoration: InputDecoration(
                                 hintText: "Email",
@@ -100,6 +101,10 @@ class _SignUpScreenState extends State<SignUpScreen> {
                                 ),
                               ),
                               keyboardType: TextInputType.emailAddress,
+                                inputFormatters: [
+                                  FilteringTextInputFormatter.allow(
+                                      RegExp(r'[a-zA-Z0-9@.]')),
+                                ],
                               validator: (value) {
                                 if (value!.isEmpty) {
                                   return 'Please enter your email';
@@ -112,11 +117,13 @@ class _SignUpScreenState extends State<SignUpScreen> {
                                 return null;
                               },
                             ),
-                            SizedBox(
-                              height:
-                                  MediaQuery.of(context).size.height * 0.0098,
-                            ),
-                            TextFormField(
+                          ),
+                          SizedBox(
+                            height: MediaQuery.of(context).size.height * 0.0098,
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.all(15.0),
+                            child: TextFormField(
                               controller: _phoneController,
                               keyboardType: TextInputType.phone,
                               decoration: InputDecoration(
@@ -138,11 +145,13 @@ class _SignUpScreenState extends State<SignUpScreen> {
                                 return null;
                               },
                             ),
-                            SizedBox(
-                              height:
-                                  MediaQuery.of(context).size.height * 0.0098,
-                            ),
-                            TextFormField(
+                          ),
+                          SizedBox(
+                            height: MediaQuery.of(context).size.height * 0.0098,
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.all(15.0),
+                            child: TextFormField(
                               controller: _firstNameController,
                               decoration: InputDecoration(
                                 hintText: "First Name",
@@ -156,7 +165,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                               keyboardType: TextInputType.text,
                               inputFormatters: [
                                 FilteringTextInputFormatter.allow(
-                                    RegExp(r'[a-zA-Z @#]')),
+                                    RegExp(r'^[a-zA-Z\u0600-\u06FF ]+$')),
                               ],
                               validator: (value) {
                                 if (value!.isEmpty) {
@@ -165,11 +174,13 @@ class _SignUpScreenState extends State<SignUpScreen> {
                                 return null;
                               },
                             ),
-                            SizedBox(
-                              height:
-                                  MediaQuery.of(context).size.height * 0.0098,
-                            ),
-                            TextFormField(
+                          ),
+                          SizedBox(
+                            height: MediaQuery.of(context).size.height * 0.0098,
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.all(15.0),
+                            child: TextFormField(
                               controller: _lastNameController,
                               decoration: InputDecoration(
                                 hintText: "Last Name",
@@ -184,7 +195,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                               keyboardType: TextInputType.text,
                               inputFormatters: [
                                 FilteringTextInputFormatter.allow(
-                                    RegExp(r'[a-zA-Z @#]')),
+                                    RegExp(r'^[a-zA-Z\u0600-\u06FF ]+$')),
                               ],
                               validator: (value) {
                                 if (value!.isEmpty) {
@@ -193,11 +204,13 @@ class _SignUpScreenState extends State<SignUpScreen> {
                                 return null;
                               },
                             ),
-                            SizedBox(
-                              height:
-                                  MediaQuery.of(context).size.height * 0.0098,
-                            ),
-                            TextFormField(
+                          ),
+                          SizedBox(
+                            height: MediaQuery.of(context).size.height * 0.0098,
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.all(15.0),
+                            child: TextFormField(
                               controller: _passwordController,
                               obscureText: _obscureText,
                               decoration: InputDecoration(
@@ -230,8 +243,11 @@ class _SignUpScreenState extends State<SignUpScreen> {
                                 return null;
                               },
                             ),
-                            const SizedBox(height: 20),
-                            ElevatedButton(
+                          ),
+                          const SizedBox(height: 20),
+                          Padding(
+                            padding: const EdgeInsets.all(15.0),
+                            child: ElevatedButton(
                               onPressed: () => _submitForm(context),
                               style: ElevatedButton.styleFrom(
                                   backgroundColor: AppColors.primaryColor,
@@ -245,43 +261,43 @@ class _SignUpScreenState extends State<SignUpScreen> {
                                     color: Color.fromRGBO(255, 255, 255, 1)),
                               ),
                             ),
-                            SizedBox(
-                              height:
-                                  MediaQuery.of(context).size.height * 0.0295,
-                            ),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                const Text(
-                                  "have an account?",
+                          ),
+                          SizedBox(
+                            height: MediaQuery.of(context).size.height * 0.0295,
+                          ),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              const Text(
+                                "have an account?",
+                                style: TextStyle(
+                                  fontWeight: FontWeight.w100,
+                                  color: AppColors.text2_Color,
+                                ),
+                              ),
+                              TextButton(
+                                onPressed: () {
+                                  Navigator.pushReplacementNamed(
+                                      context, '/signin');
+                                },
+                                child: const Text(
+                                  "Sign in",
                                   style: TextStyle(
-                                    fontWeight: FontWeight.w100,
-                                    color: AppColors.text2_Color,
+                                    color: AppColors.primaryColor,
+                                    fontWeight: FontWeight.w700,
                                   ),
                                 ),
-                                TextButton(
-                                  onPressed: () {
-                                    Navigator.pushReplacementNamed(
-                                        context, '/signin');
-                                  },
-                                  child: const Text(
-                                    "Sign in",
-                                    style: TextStyle(
-                                      color: AppColors.primaryColor,
-                                      fontWeight: FontWeight.w700,
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            ),
-                            SizedBox(
-                              height: MediaQuery.of(context).size.height * 0.06,
-                            ),
-                          ],
-                        ),
+                              ),
+                            ],
+                          ),
+                          SizedBox(
+                            height: MediaQuery.of(context).size.height * 0.06,
+                          ),
+                        ],
                       ),
                     ),
                   ),
+                  // ),
                 ),
               ),
             )));
